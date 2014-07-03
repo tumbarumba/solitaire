@@ -15,7 +15,7 @@
   limitations under the License.
   -->
 <resources>
-    <string name="app_name">Solitaire</string>
+    <string name="app_name">Tumbarumba Solitaire</string>
     <string name="menu_solitaire">Solitaire</string>
     <string name="menu_spider">Spider</string>
     <string name="menu_freecell">Freecell</string>
