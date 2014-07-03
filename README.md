@@ -5,8 +5,9 @@ with updates to allow it to run on modern devices.
 
 Magic Solitaire is a collection different card games:
 * Klondike (regular solitaire)
-* Spider Solitaire,
+* Spider Solitaire
 * Freecell
+* Forty Thieves
 
 Features include multi-level undo, animated card movement, and statistic/score tracking.
 
