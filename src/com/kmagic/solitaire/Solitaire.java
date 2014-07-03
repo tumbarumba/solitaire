@@ -19,7 +19,6 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,7 +32,7 @@ public class Solitaire extends Activity {
   private static final int MENU_RESTART   = 2;
   private static final int MENU_OPTIONS   = 3;
   private static final int MENU_SAVE_QUIT = 4;
-  private static final int MENU_QUIT      = 5;
+  private static final int MENU_DEAL      = 5;
   private static final int MENU_SOLITAIRE = 6;
   private static final int MENU_SPIDER    = 7;
   private static final int MENU_FREECELL  = 8;
@@ -111,7 +110,7 @@ public class Solitaire extends Activity {
     menu.add(0, MENU_RESTART, 0, R.string.menu_restart);
     menu.add(0, MENU_OPTIONS, 0, R.string.menu_options);
     menu.add(0, MENU_SAVE_QUIT, 0, R.string.menu_save_quit);
-    menu.add(0, MENU_QUIT, 0, R.string.menu_quit);
+    menu.add(0, MENU_DEAL, 0, R.string.menu_deal);
     menu.add(0, MENU_STATS, 0, R.string.menu_stats);
     menu.add(0, MENU_HELP, 0, R.string.menu_help);
     return true;
@@ -149,9 +148,8 @@ public class Solitaire extends Activity {
         mDoSave = false;
         finish();
         break;
-      case MENU_QUIT:
-        mDoSave = false;
-        finish();
+      case MENU_DEAL:
+        mSolitaireView.Deal();
         break;
     }
 

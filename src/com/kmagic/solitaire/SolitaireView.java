@@ -522,19 +522,18 @@ public class SolitaireView extends View {
       if (mViewMode == MODE_TEXT) {
         ChangeViewMode(MODE_NORMAL);
       } else if (mViewMode == MODE_NORMAL) {
-        mRules.EventAlert(Rules.EVENT_DEAL, mCardAnchor[0]);
-        Refresh();
+          Deal();
       }
       return true;
-      case KeyEvent.KEYCODE_BACK:
-        Undo();
-        return true;
-      }
+    case KeyEvent.KEYCODE_BACK:
+      Undo();
+      return true;
+    }
     mRules.HandleEvents();
     return super.onKeyDown(keyCode, msg);
   }
 
-  @Override
+    @Override
   public boolean onTouchEvent(MotionEvent event) {
     boolean ret = false;
 
@@ -741,6 +740,11 @@ public class SolitaireView extends View {
     } else if (mViewMode == MODE_WIN) {
       ChangeViewMode(MODE_WIN_STOP);
     }
+  }
+
+  public void Deal() {
+    mRules.EventAlert(Rules.EVENT_DEAL, mCardAnchor[0]);
+    Refresh();
   }
 
   public void Undo() {
