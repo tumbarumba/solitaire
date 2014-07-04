@@ -31,12 +31,12 @@ public class Stats {
         statsView.setFocusable(true);
         statsView.setFocusableInTouchMode(true);
 
-        Rules rules = view.GetRules();
+        Rules rules = view.getRules();
         final SharedPreferences settings = solitaire.GetSettings();
-        final String gameAttemptString = rules.GetGameTypeString() + "Attempts";
-        final String gameWinString = rules.GetGameTypeString() + "Wins";
-        final String gameTimeString = rules.GetGameTypeString() + "Time";
-        final String gameScoreString = rules.GetGameTypeString() + "Score";
+        final String gameAttemptString = rules.getGameTypeString() + "Attempts";
+        final String gameWinString = rules.getGameTypeString() + "Wins";
+        final String gameTimeString = rules.getGameTypeString() + "Time";
+        final String gameScoreString = rules.getGameTypeString() + "Score";
         int attempts = settings.getInt(gameAttemptString, 0);
         int wins = settings.getInt(gameWinString, 0);
         int bestTime = settings.getInt(gameTimeString, -1);
@@ -47,7 +47,7 @@ public class Stats {
         }
 
         TextView tv = (TextView) solitaire.findViewById(R.id.text_title);
-        tv.setText(rules.GetPrettyGameTypeString() + " Statistics\n\n");
+        tv.setText(rules.getPrettyGameTypeString() + " Statistics\n\n");
         tv = (TextView) solitaire.findViewById(R.id.text_wins);
         tv.setText("Wins: " + wins + " Attempts: " + attempts);
         tv = (TextView) solitaire.findViewById(R.id.text_percentage);
@@ -58,7 +58,7 @@ public class Stats {
             tv = (TextView) solitaire.findViewById(R.id.text_best_time);
             tv.setText("Fastest Time: " + String.format("%d:%02d", minutes, seconds));
         }
-        if (rules.HasScore()) {
+        if (rules.hasScore()) {
             tv = (TextView) solitaire.findViewById(R.id.text_high_score);
             tv.setText("High Score: " + highScore);
         }
@@ -67,7 +67,7 @@ public class Stats {
         final Button accept = (Button) solitaire.findViewById(R.id.button_accept);
         accept.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                solitaire.CancelOptions();
+                solitaire.cancelOptions();
             }
         });
         final Button clear = (Button) solitaire.findViewById(R.id.button_clear);
@@ -78,8 +78,8 @@ public class Stats {
                 editor.putInt(gameWinString, 0);
                 editor.putInt(gameTimeString, -1);
                 editor.commit();
-                view.ClearGameStarted();
-                solitaire.CancelOptions();
+                view.clearGameStarted();
+                solitaire.cancelOptions();
             }
         });
         statsView.setOnKeyListener(new View.OnKeyListener() {
@@ -88,7 +88,7 @@ public class Stats {
                 switch (keyCode) {
                     case KeyEvent.KEYCODE_BACK:
                     case KeyEvent.KEYCODE_HOME:
-                        solitaire.CancelOptions();
+                        solitaire.cancelOptions();
                         return true;
                 }
                 return false;

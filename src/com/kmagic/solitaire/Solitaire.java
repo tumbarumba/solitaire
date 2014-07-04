@@ -41,32 +41,32 @@ public class Solitaire extends Activity {
     private static final int MENU_HELP = 11;
 
     // View extracted from main.xml.
-    private View mMainView;
-    private SolitaireView mSolitaireView;
-    private SharedPreferences mSettings;
+    private View mainView;
+    private SolitaireView solitaireView;
+    private SharedPreferences settings;
 
-    private boolean mDoSave;
+    private boolean doSave;
 
     // Shared preferences are where the various user settings are stored.
     public SharedPreferences GetSettings() {
-        return mSettings;
+        return settings;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDoSave = true;
+        doSave = true;
 
         // Force landscape and no title for extra room
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // If the user has never accepted the EULA show it again.
-        mSettings = getSharedPreferences("SolitairePreferences", 0);
+        settings = getSharedPreferences("SolitairePreferences", 0);
         setContentView(R.layout.main);
-        mMainView = findViewById(R.id.main_view);
-        mSolitaireView = (SolitaireView) findViewById(R.id.solitaire);
-        mSolitaireView.SetTextView((TextView) findViewById(R.id.text));
+        mainView = findViewById(R.id.main_view);
+        solitaireView = (SolitaireView) findViewById(R.id.solitaire);
+        solitaireView.setTextView((TextView) findViewById(R.id.text));
 
         //StartSolitaire(savedInstanceState);
     }
@@ -76,26 +76,26 @@ public class Solitaire extends Activity {
     @Override
     public void onStart() {
         super.onStart();
-        if (mSettings.getBoolean("SolitaireSaveValid", false)) {
+        if (settings.getBoolean("SolitaireSaveValid", false)) {
             SharedPreferences.Editor editor = GetSettings().edit();
             editor.putBoolean("SolitaireSaveValid", false);
             editor.commit();
             // If save is corrupt, just start a new game.
-            if (mSolitaireView.LoadSave()) {
-                HelpSplashScreen();
+            if (solitaireView.loadSave()) {
+                helpSplashScreen();
                 return;
             }
         }
 
-        mSolitaireView.InitGame(mSettings.getInt("LastType", Rules.SOLITAIRE));
-        HelpSplashScreen();
+        solitaireView.initGame(settings.getInt("LastType", Rules.SOLITAIRE));
+        helpSplashScreen();
     }
 
     // Force show the help if this is the first time played. Sadly no one reads
     // it anyways.
-    private void HelpSplashScreen() {
-        if (!mSettings.getBoolean("PlayedBefore", false)) {
-            mSolitaireView.DisplayHelp();
+    private void helpSplashScreen() {
+        if (!settings.getBoolean("PlayedBefore", false)) {
+            solitaireView.displayHelp();
         }
     }
 
@@ -122,36 +122,36 @@ public class Solitaire extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case MENU_SOLITAIRE:
-                mSolitaireView.InitGame(Rules.SOLITAIRE);
+                solitaireView.initGame(Rules.SOLITAIRE);
                 break;
             case MENU_SPIDER:
-                mSolitaireView.InitGame(Rules.SPIDER);
+                solitaireView.initGame(Rules.SPIDER);
                 break;
             case MENU_FREECELL:
-                mSolitaireView.InitGame(Rules.FREECELL);
+                solitaireView.initGame(Rules.FREECELL);
                 break;
             case MENU_FORTYTHIEVES:
-                mSolitaireView.InitGame(Rules.FORTYTHIEVES);
+                solitaireView.initGame(Rules.FORTYTHIEVES);
                 break;
             case MENU_RESTART:
-                mSolitaireView.RestartGame();
+                solitaireView.restartGame();
                 break;
             case MENU_STATS:
-                DisplayStats();
+                displayStats();
                 break;
             case MENU_OPTIONS:
-                DisplayOptions();
+                displayOptions();
                 break;
             case MENU_HELP:
-                mSolitaireView.DisplayHelp();
+                solitaireView.displayHelp();
                 break;
             case MENU_SAVE_QUIT:
-                mSolitaireView.SaveGame();
-                mDoSave = false;
+                solitaireView.saveGame();
+                doSave = false;
                 finish();
                 break;
             case MENU_DEAL:
-                mSolitaireView.Deal();
+                solitaireView.deal();
                 break;
         }
 
@@ -161,21 +161,21 @@ public class Solitaire extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        mSolitaireView.onPause();
+        solitaireView.onPause();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (mDoSave) {
-            mSolitaireView.SaveGame();
+        if (doSave) {
+            solitaireView.saveGame();
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mSolitaireView.onResume();
+        solitaireView.onResume();
     }
 
     @Override
@@ -183,30 +183,30 @@ public class Solitaire extends Activity {
         super.onSaveInstanceState(outState);
     }
 
-    public void DisplayOptions() {
-        mSolitaireView.SetTimePassing(false);
-        new Options(this, mSolitaireView.GetDrawMaster());
+    public void displayOptions() {
+        solitaireView.setTimePassing(false);
+        new Options(this, solitaireView.getDrawMaster());
     }
 
-    public void DisplayStats() {
-        mSolitaireView.SetTimePassing(false);
-        new Stats(this, mSolitaireView);
+    public void displayStats() {
+        solitaireView.setTimePassing(false);
+        new Stats(this, solitaireView);
     }
 
-    public void CancelOptions() {
-        setContentView(mMainView);
-        mSolitaireView.requestFocus();
-        mSolitaireView.SetTimePassing(true);
+    public void cancelOptions() {
+        setContentView(mainView);
+        solitaireView.requestFocus();
+        solitaireView.setTimePassing(true);
     }
 
-    public void NewOptions() {
-        setContentView(mMainView);
-        mSolitaireView.InitGame(mSettings.getInt("LastType", Rules.SOLITAIRE));
+    public void newOptions() {
+        setContentView(mainView);
+        solitaireView.initGame(settings.getInt("LastType", Rules.SOLITAIRE));
     }
 
     // This is called for option changes that require a refresh, but not a new game
-    public void RefreshOptions() {
-        setContentView(mMainView);
-        mSolitaireView.RefreshOptions();
+    public void refreshOptions() {
+        setContentView(mainView);
+        solitaireView.refreshOptions();
     }
 }

@@ -21,95 +21,91 @@ class SelectCard {
 
     private static final int MAX_CARDS = 13;
 
-    private boolean mValid;
-    private int mSelected;
-    private Card[] mCard;
-    private int mCardCount;
-    private CardAnchor mCardAnchor;
-    private float mLeftEdge;
-    private float mRightEdge;
-    private int mHeight;
+    private boolean isValid;
+    private int selected;
+    private Card[] cards;
+    private int cardCount;
+    private CardAnchor cardAnchor;
+    private float leftEdge;
+    private float rightEdge;
+    private int height;
 
     public SelectCard() {
-        mHeight = 1;
-        mCard = new Card[MAX_CARDS];
-        Clear();
+        height = 1;
+        cards = new Card[MAX_CARDS];
+        clear();
     }
 
-    private void Clear() {
-        mValid = false;
-        mSelected = -1;
-        mCardCount = 0;
-        mLeftEdge = -1;
-        mRightEdge = -1;
-        mCardAnchor = null;
+    private void clear() {
+        isValid = false;
+        selected = -1;
+        cardCount = 0;
+        leftEdge = -1;
+        rightEdge = -1;
+        cardAnchor = null;
         for (int i = 0; i < MAX_CARDS; i++) {
-            mCard[i] = null;
+            cards[i] = null;
         }
     }
 
-    public void SetHeight(int height) {
-        mHeight = height;
+    public void setHeight(int height) {
+        this.height = height;
     }
 
-    public boolean IsValid() {
-        return mValid;
+    public CardAnchor getAnchor() {
+        return cardAnchor;
     }
 
-    public CardAnchor GetAnchor() {
-        return mCardAnchor;
+    public int getCount() {
+        if (selected == -1)
+            return cardCount;
+        return cardCount - selected;
     }
 
-    public int GetCount() {
-        if (mSelected == -1)
-            return mCardCount;
-        return mCardCount - mSelected;
-    }
-
-    public void Draw(DrawMaster drawMaster, Canvas canvas) {
-        drawMaster.DrawLightShade(canvas);
-        for (int i = 0; i < mCardCount; i++) {
-            drawMaster.DrawCard(canvas, mCard[i]);
+    public void draw(DrawMaster drawMaster, Canvas canvas) {
+        drawMaster.drawLightShade(canvas);
+        for (int i = 0; i < cardCount; i++) {
+            drawMaster.drawCard(canvas, cards[i]);
         }
     }
 
-    public void InitFromAnchor(CardAnchor cardAnchor) {
-        mValid = true;
-        mSelected = -1;
-        mCardAnchor = cardAnchor;
-        Card[] card = cardAnchor.GetCardStack();
+    public void initFromAnchor(CardAnchor cardAnchor) {
+        isValid = true;
+        selected = -1;
+        this.cardAnchor = cardAnchor;
+        Card[] card = cardAnchor.getCardStack();
         for (int i = 0; i < card.length; i++) {
-            mCard[i] = card[i];
+            cards[i] = card[i];
         }
-        mCardCount = card.length;
+        cardCount = card.length;
 
-        int mid = mCardCount / 2;
-        if (mCardCount % 2 == 0) {
+        int mid = cardCount / 2;
+        if (cardCount % 2 == 0) {
             mid--;
         }
-        float x = mCard[0].GetX();
-        float y = mCard[mid].GetY();
+        float x = cards[0].getX();
+        float y = cards[mid].getY();
         if (y - mid * (Card.HEIGHT + 5) < 0) {
             mid = 0;
             y = 5;
         }
 
-        for (int i = 0; i < mCardCount; i++) {
-            mCard[i].SetPosition(x, y + (i - mid) * (Card.HEIGHT + 5));
+        for (int i = 0; i < cardCount; i++) {
+            cards[i].setPosition(x, y + (i - mid) * (Card.HEIGHT + 5));
         }
 
-        mLeftEdge = cardAnchor.GetLeftEdge();
-        mRightEdge = cardAnchor.GetRightEdge();
+        leftEdge = cardAnchor.getLeftEdge();
+        rightEdge = cardAnchor.getRightEdge();
     }
 
-    public boolean Tap(float x, float y) {
-        float left = mLeftEdge == -1 ? mCard[0].GetX() : mLeftEdge;
-        float right = mRightEdge == -1 ? mCard[0].GetX() + Card.WIDTH : mRightEdge;
-        mSelected = -1;
+    public boolean tap(float x, float y) {
+        float left = leftEdge == -1 ? cards[0].getX() : leftEdge;
+        float right = rightEdge == -1 ? cards[0].getX() + Card.WIDTH : rightEdge;
+        selected = -1;
         if (x >= left && x <= right) {
-            for (int i = 0; i < mCardCount; i++) {
-                if (y >= mCard[i].GetY() && y <= mCard[i].GetY() + Card.HEIGHT) {
-                    mSelected = i;
+            for (int i = 0; i < cardCount; i++) {
+                if (y >= cards[i].getY() && y <= cards[i].getY() + Card.HEIGHT) {
+                    selected = i;
                     return true;
                 }
             }
@@ -117,53 +113,53 @@ class SelectCard {
         return false;
     }
 
-    public void Release() {
-        if (mValid) {
-            mValid = false;
-            for (int i = 0; i < mCardCount; i++) {
-                mCardAnchor.AddCard(mCard[i]);
+    public void release() {
+        if (isValid) {
+            isValid = false;
+            for (int i = 0; i < cardCount; i++) {
+                cardAnchor.addCard(cards[i]);
             }
-            Clear();
+            clear();
         }
     }
 
-    public Card[] DumpCards() {
+    public Card[] dumpCards() {
         Card[] ret = null;
-        if (mValid) {
-            mValid = false;
-            if (mSelected > 0) {
-                for (int i = 0; i < mCardCount; i++) {
-                    if (i < mSelected) {
-                        mCardAnchor.AddCard(mCard[i]);
-                    } else if (i == mSelected) {
-                        for (int j = 0; i < mCardCount; i++, j++) {
-                            mCard[j] = mCard[i];
+        if (isValid) {
+            isValid = false;
+            if (selected > 0) {
+                for (int i = 0; i < cardCount; i++) {
+                    if (i < selected) {
+                        cardAnchor.addCard(cards[i]);
+                    } else if (i == selected) {
+                        for (int j = 0; i < cardCount; i++, j++) {
+                            cards[j] = cards[i];
                         }
                         break;
                     }
                 }
             }
 
-            ret = new Card[GetCount()];
-            for (int i = 0; i < GetCount(); i++) {
-                ret[i] = mCard[i];
+            ret = new Card[getCount()];
+            for (int i = 0; i < getCount(); i++) {
+                ret[i] = cards[i];
             }
-            Clear();
+            clear();
         }
         return ret;
     }
 
-    public void Scroll(float dy) {
+    public void scroll(float dy) {
         float x, y;
-        for (int i = 0; i < mCardCount; i++) {
-            x = mCard[i].GetX();
-            y = mCard[i].GetY() - dy;
-            mCard[i].SetPosition(x, y);
+        for (int i = 0; i < cardCount; i++) {
+            x = cards[i].getX();
+            y = cards[i].getY() - dy;
+            cards[i].setPosition(x, y);
         }
     }
 
-    public boolean IsOnCard() {
-        return mSelected != -1;
+    public boolean isOnCard() {
+        return selected != -1;
     }
 }
 

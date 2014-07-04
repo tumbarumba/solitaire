@@ -23,126 +23,122 @@ class MoveCard {
 
     private static final int MAX_CARDS = 13;
 
-    private boolean mValid;
-    private Card[] mCard;
-    private int mCardCount;
-    private CardAnchor mCardAnchor;
-    private PointF mOriginalPoint;
+    private boolean isValid;
+    private Card[] cards;
+    private int cardCount;
+    private CardAnchor cardAnchor;
+    private PointF originalPoint;
 
     public MoveCard() {
-        mCard = new Card[MAX_CARDS];
-        mOriginalPoint = new PointF(1, 1);
-        Clear();
+        cards = new Card[MAX_CARDS];
+        originalPoint = new PointF(1, 1);
+        clear();
     }
 
-    public boolean IsValid() {
-        return mValid;
+    public CardAnchor getAnchor() {
+        return cardAnchor;
     }
 
-    public CardAnchor GetAnchor() {
-        return mCardAnchor;
+    public int getCount() {
+        return cardCount;
     }
 
-    public int GetCount() {
-        return mCardCount;
+    public Card getTopCard() {
+        return cards[0];
     }
 
-    public Card GetTopCard() {
-        return mCard[0];
+    public void setAnchor(CardAnchor anchor) {
+        cardAnchor = anchor;
     }
 
-    public void SetAnchor(CardAnchor anchor) {
-        mCardAnchor = anchor;
-    }
-
-    public void Draw(DrawMaster drawMaster, Canvas canvas) {
-        for (int i = 0; i < mCardCount; i++) {
-            drawMaster.DrawCard(canvas, mCard[i]);
+    public void draw(DrawMaster drawMaster, Canvas canvas) {
+        for (int i = 0; i < cardCount; i++) {
+            drawMaster.drawCard(canvas, cards[i]);
         }
     }
 
-    private void Clear() {
-        mValid = false;
-        mCardCount = 0;
-        mCardAnchor = null;
+    private void clear() {
+        isValid = false;
+        cardCount = 0;
+        cardAnchor = null;
         for (int i = 0; i < MAX_CARDS; i++) {
-            mCard[i] = null;
+            cards[i] = null;
         }
     }
 
-    public void Release() {
-        if (mValid) {
-            mValid = false;
-            for (int i = 0; i < mCardCount; i++) {
-                mCardAnchor.AddCard(mCard[i]);
+    public void release() {
+        if (isValid) {
+            isValid = false;
+            for (int i = 0; i < cardCount; i++) {
+                cardAnchor.addCard(cards[i]);
             }
-            Clear();
+            clear();
         }
     }
 
-    public void AddCard(Card card) {
-        if (mCardCount == 0) {
-            mOriginalPoint.set(card.GetX(), card.GetY());
+    public void addCard(Card card) {
+        if (cardCount == 0) {
+            originalPoint.set(card.getX(), card.getY());
         }
-        mCard[mCardCount++] = card;
-        mValid = true;
+        cards[cardCount++] = card;
+        isValid = true;
     }
 
-    public void MovePosition(float dx, float dy) {
-        for (int i = 0; i < mCardCount; i++) {
-            mCard[i].MovePosition(dx, dy);
+    public void movePosition(float dx, float dy) {
+        for (int i = 0; i < cardCount; i++) {
+            cards[i].movePosition(dx, dy);
         }
     }
 
-    public Card[] DumpCards() {
-        return DumpCards(true);
+    public Card[] dumpCards() {
+        return dumpCards(true);
     }
 
-    public Card[] DumpCards(boolean unhide) {
+    public Card[] dumpCards(boolean unhide) {
         Card[] ret = null;
-        if (mValid) {
-            mValid = false;
+        if (isValid) {
+            isValid = false;
             if (unhide) {
-                mCardAnchor.UnhideTopCard();
+                cardAnchor.unhideTopCard();
             }
-            ret = new Card[mCardCount];
-            for (int i = 0; i < mCardCount; i++) {
-                ret[i] = mCard[i];
+            ret = new Card[cardCount];
+            for (int i = 0; i < cardCount; i++) {
+                ret[i] = cards[i];
             }
-            Clear();
+            clear();
         }
         return ret;
     }
 
-    public void InitFromSelectCard(SelectCard selectCard, float x, float y) {
-        int count = selectCard.GetCount();
-        mCardAnchor = selectCard.GetAnchor();
-        Card[] cards = selectCard.DumpCards();
+    public void initFromSelectCard(SelectCard selectCard, float x, float y) {
+        int count = selectCard.getCount();
+        cardAnchor = selectCard.getAnchor();
+        Card[] cards = selectCard.dumpCards();
 
         for (int i = 0; i < count; i++) {
-            cards[i].SetPosition(x - Card.WIDTH / 2, y - Card.HEIGHT / 2 + 15 * i);
-            AddCard(cards[i]);
+            cards[i].setPosition(x - Card.WIDTH / 2, y - Card.HEIGHT / 2 + 15 * i);
+            addCard(cards[i]);
         }
-        mValid = true;
+        isValid = true;
     }
 
-    public void InitFromAnchor(CardAnchor cardAnchor, float x, float y) {
-        mCardAnchor = cardAnchor;
-        Card[] cards = cardAnchor.GetCardStack();
+    public void initFromAnchor(CardAnchor cardAnchor, float x, float y) {
+        this.cardAnchor = cardAnchor;
+        Card[] cards = cardAnchor.getCardStack();
 
         for (int i = 0; i < cards.length; i++) {
-            cards[i].SetPosition(x, y + 15 * i);
-            AddCard(cards[i]);
+            cards[i].setPosition(x, y + 15 * i);
+            addCard(cards[i]);
         }
-        mValid = true;
+        isValid = true;
     }
 
-    public boolean HasMoved() {
-        float x = mCard[0].GetX();
-        float y = mCard[0].GetY();
+    public boolean hasMoved() {
+        float x = cards[0].getX();
+        float y = cards[0].getY();
 
-        if (x >= mOriginalPoint.x - 2 && x <= mOriginalPoint.x + 2 &&
-                y >= mOriginalPoint.y - 2 && y <= mOriginalPoint.y + 2) {
+        if (x >= originalPoint.x - 2 && x <= originalPoint.x + 2 &&
+                y >= originalPoint.y - 2 && y <= originalPoint.y + 2) {
             return false;
         }
         return true;

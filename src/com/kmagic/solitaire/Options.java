@@ -71,7 +71,7 @@ public class Options {
                 if (bigCards != ((RadioButton) solitaire.findViewById(R.id.big_cards)).isChecked()) {
                     editor.putBoolean("DisplayBigCards", !bigCards);
                     commit = true;
-                    drawMaster.DrawCards(!bigCards);
+                    drawMaster.drawCards(!bigCards);
                 }
 
                 if (displayTime != ((CheckBox) solitaire.findViewById(R.id.display_time)).isChecked()) {
@@ -124,19 +124,19 @@ public class Options {
 
                 if (commit) {
                     editor.commit();
-                    solitaire.RefreshOptions();
+                    solitaire.refreshOptions();
                 }
                 if (newGame) {
-                    solitaire.NewOptions();
+                    solitaire.newOptions();
                 } else {
-                    solitaire.CancelOptions();
+                    solitaire.cancelOptions();
                 }
             }
         });
         final Button decline = (Button) solitaire.findViewById(R.id.button_cancel);
         decline.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                solitaire.CancelOptions();
+                solitaire.cancelOptions();
             }
         });
 
@@ -146,7 +146,7 @@ public class Options {
                 switch (keyCode) {
                     case KeyEvent.KEYCODE_BACK:
                     case KeyEvent.KEYCODE_HOME:
-                        solitaire.CancelOptions();
+                        solitaire.cancelOptions();
                         return true;
                 }
                 return false;

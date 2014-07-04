@@ -20,66 +20,60 @@ import java.util.Random;
 
 public class Deck {
 
-    private Card[] mCard;
-    private int mCardCount;
-    private int mTotalCards;
+    private Card[] cards;
+    private int cardCount;
 
     public Deck(int decks) {
-        Init(decks, 4);
+        init(decks, 4);
     }
 
-    public Deck(int decks, int suits) {
-        if (suits == 2) {
-            decks *= 2;
-        } else if (suits == 1) {
-            decks *= 4;
+    public Deck(int deckCount, int suitCount) {
+        if (suitCount == 2) {
+            deckCount *= 2;
+        } else if (suitCount == 1) {
+            deckCount *= 4;
         }
-        Init(decks, suits);
+        init(deckCount, suitCount);
     }
 
-    private void Init(int decks, int suits) {
-        mCardCount = decks * 13 * suits;
-        mTotalCards = mCardCount;
-        mCard = new Card[mCardCount];
-        for (int deck = 0; deck < decks; deck++) {
-            for (int suit = Card.CLUBS; suit < suits; suit++) {
+    private void init(int deckCount, int suitCount) {
+        cardCount = deckCount * 13 * suitCount;
+        cards = new Card[cardCount];
+        for (int deck = 0; deck < deckCount; deck++) {
+            for (int suit = Card.CLUBS; suit < suitCount; suit++) {
                 for (int value = 0; value < 13; value++) {
-                    mCard[deck * suits * 13 + suit * Card.KING + value] = new Card(value + 1, suit);
+                    cards[deck * suitCount * 13 + suit * Card.KING + value] = new Card(value + 1, suit);
                 }
             }
         }
 
-        Shuffle();
-        Shuffle();
-        Shuffle();
+        shuffle();
+        shuffle();
+        shuffle();
     }
 
-    public void PushCard(Card card) {
-        mCard[mCardCount++] = card;
-    }
-
-    public Card PopCard() {
-        if (mCardCount > 0) {
-            return mCard[--mCardCount];
+    public Card popCard() {
+        if (cardCount > 0) {
+            return cards[--cardCount];
         }
         return null;
     }
 
-    public boolean Empty() {
-        return mCardCount == 0;
+    public boolean isEmpty() {
+        return cardCount == 0;
     }
 
-    public void Shuffle() {
-        int lastIdx = mCardCount - 1;
+    public void shuffle() {
+        int lastIdx = cardCount - 1;
         int swapIdx;
         Card swapCard;
         Random rand = new Random();
 
         while (lastIdx > 1) {
             swapIdx = rand.nextInt(lastIdx);
-            swapCard = mCard[swapIdx];
-            mCard[swapIdx] = mCard[lastIdx];
-            mCard[lastIdx] = swapCard;
+            swapCard = cards[swapIdx];
+            cards[swapIdx] = cards[lastIdx];
+            cards[lastIdx] = swapCard;
             lastIdx--;
         }
     }

@@ -20,91 +20,89 @@ import android.util.Log;
 import java.util.Stack;
 
 public class Replay implements Runnable {
-    private Stack<Move> mMoveStack;
-    private SolitaireView mView;
-    private AnimateCard mAnimateCard;
-    private CardAnchor[] mCardAnchor;
-    private boolean mIsPlaying;
+    private Stack<Move> moveStack;
+    private SolitaireView view;
+    private AnimateCard animateCard;
+    private CardAnchor[] cardAnchor;
+    private boolean isPlaying;
 
-    private Card[] mSinkCard;
-    private int mSinkCount;
-    private int mEventCount;
-    private CardAnchor mSinkAnchor;
-    private CardAnchor mSinkFrom;
-    private boolean mSinkUnhide;
+    private Card[] sinkCards;
+    private int sinkCount;
+    private CardAnchor sinkAnchor;
+    private CardAnchor sinkFrom;
+    private boolean sinkUnhide;
 
-    public Replay(SolitaireView view, AnimateCard animateCard) {
-        mView = view;
-        mAnimateCard = animateCard;
-        mIsPlaying = false;
-        mMoveStack = new Stack<Move>();
-        mSinkCard = new Card[104];
+    public Replay(SolitaireView theView, AnimateCard animCard) {
+        view = theView;
+        animateCard = animCard;
+        isPlaying = false;
+        moveStack = new Stack<Move>();
+        sinkCards = new Card[104];
     }
 
-    public boolean IsPlaying() {
-        return mIsPlaying;
+    public boolean isPlaying() {
+        return isPlaying;
     }
 
-    public void StopPlaying() {
-        mIsPlaying = false;
+    public void stopPlaying() {
+        isPlaying = false;
     }
 
-    public void StartReplay(Stack<Move> history, CardAnchor[] anchor) {
-        mCardAnchor = anchor;
-        mMoveStack.clear();
+    public void startReplay(Stack<Move> history, CardAnchor[] anchor) {
+        cardAnchor = anchor;
+        moveStack.clear();
         while (!history.empty()) {
             Move move = history.peek();
-            if (move.GetToBegin() != move.GetToEnd()) {
-                for (int i = move.GetToEnd(); i >= move.GetToBegin(); i--) {
-                    mMoveStack.push(new Move(move.GetFrom(), i, 1, false, false));
+            if (move.getToBegin() != move.getToEnd()) {
+                for (int i = move.getToEnd(); i >= move.getToBegin(); i--) {
+                    moveStack.push(new Move(move.getFrom(), i, 1, false, false));
                 }
             } else {
-                mMoveStack.push(move);
+                moveStack.push(move);
             }
-            mView.Undo();
+            view.undo();
         }
-        mView.DrawBoard();
-        mIsPlaying = true;
-        PlayNext();
+        view.drawBoard();
+        isPlaying = true;
+        playNext();
     }
 
-    public void PlayNext() {
-        if (!mIsPlaying || mMoveStack.empty()) {
-            mIsPlaying = false;
-            mView.StopAnimating();
+    public void playNext() {
+        if (!isPlaying || moveStack.empty()) {
+            isPlaying = false;
+            view.stopAnimating();
             return;
         }
-        Move move = mMoveStack.pop();
+        Move move = moveStack.pop();
 
-        if (move.GetToBegin() == move.GetToEnd()) {
-            mSinkCount = move.GetCount();
-            mEventCount = 0;
-            mSinkAnchor = mCardAnchor[move.GetToBegin()];
-            mSinkUnhide = move.GetUnhide();
-            mSinkFrom = mCardAnchor[move.GetFrom()];
+        if (move.getToBegin() == move.getToEnd()) {
+            sinkCount = move.getCount();
+            sinkAnchor = cardAnchor[move.getToBegin()];
+            sinkUnhide = move.getUnhide();
+            sinkFrom = cardAnchor[move.getFrom()];
 
-            if (move.GetInvert()) {
-                for (int i = 0; i < mSinkCount; i++) {
-                    mSinkCard[i] = mSinkFrom.PopCard();
+            if (move.getInvert()) {
+                for (int i = 0; i < sinkCount; i++) {
+                    sinkCards[i] = sinkFrom.popCard();
                 }
             } else {
-                for (int i = mSinkCount - 1; i >= 0; i--) {
-                    mSinkCard[i] = mSinkFrom.PopCard();
+                for (int i = sinkCount - 1; i >= 0; i--) {
+                    sinkCards[i] = sinkFrom.popCard();
                 }
             }
-            mAnimateCard.MoveCards(mSinkCard, mSinkAnchor, mSinkCount, this);
+            animateCard.moveCards(sinkCards, sinkAnchor, sinkCount, this);
         } else {
             Log.e("Replay.java", "Invalid move encountered, aborting.");
-            mIsPlaying = false;
+            isPlaying = false;
         }
     }
 
     public void run() {
-        if (mIsPlaying) {
-            if (mSinkUnhide) {
-                mSinkFrom.UnhideTopCard();
+        if (isPlaying) {
+            if (sinkUnhide) {
+                sinkFrom.unhideTopCard();
             }
-            PlayNext();
+            playNext();
         }
     }
 }

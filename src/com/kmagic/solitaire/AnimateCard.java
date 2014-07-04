@@ -21,106 +21,106 @@ public class AnimateCard {
 
     private static final float PPF = 40;
 
-    protected SolitaireView mView;
-    private Card[] mCard;
-    private CardAnchor mCardAnchor;
-    private int mCount;
-    private int mFrames;
-    private float mDx;
-    private float mDy;
-    private boolean mAnimate;
-    private Runnable mCallback;
+    protected SolitaireView view;
+    private Card[] cards;
+    private CardAnchor cardAnchor;
+    private int count;
+    private int frames;
+    private float dx;
+    private float dy;
+    private boolean isAnimating;
+    private Runnable callback;
 
     public AnimateCard(SolitaireView view) {
-        mView = view;
-        mAnimate = false;
-        mCard = new Card[104];
-        mCallback = null;
+        this.view = view;
+        this.isAnimating = false;
+        this.cards = new Card[104];
+        this.callback = null;
     }
 
-    public boolean GetAnimate() {
-        return mAnimate;
+    public boolean isAnimating() {
+        return isAnimating;
     }
 
-    public void Draw(DrawMaster drawMaster, Canvas canvas) {
-        if (mAnimate) {
-            for (int j = 0; j < mCount; j++) {
-                mCard[j].MovePosition(-mDx, -mDy);
+    public void draw(DrawMaster drawMaster, Canvas canvas) {
+        if (isAnimating) {
+            for (int j = 0; j < count; j++) {
+                cards[j].movePosition(-dx, -dy);
             }
-            for (int i = 0; i < mCount; i++) {
-                drawMaster.DrawCard(canvas, mCard[i]);
+            for (int i = 0; i < count; i++) {
+                drawMaster.drawCard(canvas, cards[i]);
             }
-            mFrames--;
-            if (mFrames <= 0) {
-                mAnimate = false;
-                Finish();
+            frames--;
+            if (frames <= 0) {
+                isAnimating = false;
+                finish();
             }
         }
     }
 
-    public void MoveCards(Card[] card, CardAnchor anchor, int count, Runnable callback) {
-        float x = anchor.GetX();
-        float y = anchor.GetNewY();
-        mCardAnchor = anchor;
-        mCallback = callback;
-        mAnimate = true;
+    public void moveCards(Card[] cardsToMove, CardAnchor anAnchor, int cardCount, Runnable aCallback) {
+        float x = anAnchor.getX();
+        float y = anAnchor.getNewY();
+        cardAnchor = anAnchor;
+        callback = aCallback;
+        isAnimating = true;
 
+        for (int i = 0; i < cardCount; i++) {
+            cards[i] = cardsToMove[i];
+        }
+        count = cardCount;
+        move(cards[0], x, y);
+    }
+
+    public void moveCard(Card theCard, CardAnchor theAnchor) {
+        float x = theAnchor.getX();
+        float y = theAnchor.getNewY();
+        cardAnchor = theAnchor;
+        callback = null;
+        isAnimating = true;
+
+        cards[0] = theCard;
+        count = 1;
+        move(theCard, x, y);
+    }
+
+    private void move(Card card, float x, float y) {
+        float distanceX = x - card.getX();
+        float distanceY = y - card.getY();
+
+        frames = Math.round((float) Math.sqrt(distanceX * distanceX + distanceY * distanceY) / PPF);
+        if (frames == 0) {
+            frames = 1;
+        }
+        dx = distanceX / frames;
+        dy = distanceY / frames;
+
+        view.startAnimating();
+        if (!isAnimating) {
+            finish();
+        }
+    }
+
+    private void finish() {
         for (int i = 0; i < count; i++) {
-            mCard[i] = card[i];
+            cardAnchor.addCard(cards[i]);
+            cards[i] = null;
         }
-        mCount = count;
-        Move(mCard[0], x, y);
-    }
-
-    public void MoveCard(Card card, CardAnchor anchor) {
-        float x = anchor.GetX();
-        float y = anchor.GetNewY();
-        mCardAnchor = anchor;
-        mCallback = null;
-        mAnimate = true;
-
-        mCard[0] = card;
-        mCount = 1;
-        Move(card, x, y);
-    }
-
-    private void Move(Card card, float x, float y) {
-        float dx = x - card.GetX();
-        float dy = y - card.GetY();
-
-        mFrames = Math.round((float) Math.sqrt(dx * dx + dy * dy) / PPF);
-        if (mFrames == 0) {
-            mFrames = 1;
-        }
-        mDx = dx / mFrames;
-        mDy = dy / mFrames;
-
-        mView.StartAnimating();
-        if (!mAnimate) {
-            Finish();
+        cardAnchor = null;
+        view.drawBoard();
+        if (callback != null) {
+            callback.run();
         }
     }
 
-    private void Finish() {
-        for (int i = 0; i < mCount; i++) {
-            mCardAnchor.AddCard(mCard[i]);
-            mCard[i] = null;
-        }
-        mCardAnchor = null;
-        mView.DrawBoard();
-        if (mCallback != null) {
-            mCallback.run();
-        }
-    }
-
-    public void Cancel() {
-        if (mAnimate) {
-            for (int i = 0; i < mCount; i++) {
-                mCardAnchor.AddCard(mCard[i]);
-                mCard[i] = null;
+    public void cancel() {
+        if (isAnimating) {
+            for (int i = 0; i < count; i++) {
+                cardAnchor.addCard(cards[i]);
+                cards[i] = null;
             }
-            mCardAnchor = null;
-            mAnimate = false;
+            cardAnchor = null;
+            isAnimating = false;
         }
     }
 }

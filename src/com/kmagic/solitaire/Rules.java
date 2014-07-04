@@ -37,22 +37,25 @@ public abstract class Rules {
     public static final int AUTO_MOVE_ALWAYS = 2;
     public static final int AUTO_MOVE_FLING_ONLY = 1;
     public static final int AUTO_MOVE_NEVER = 0;
-    protected SolitaireView mView;
-    protected Stack<Move> mMoveHistory;
-    protected AnimateCard mAnimateCard;
-    protected boolean mIgnoreEvents;
-    protected EventPoster mEventPoster;
-    // Anchors
-    protected CardAnchor[] mCardAnchor;
-    protected int mCardAnchorCount;
-    protected Deck mDeck;
-    protected int mCardCount;
-    // Automove
-    protected int mAutoMoveLevel;
-    protected boolean mWasFling;
-    private int mType;
 
-    public static Rules CreateRules(int type, Bundle map, SolitaireView view,
+    protected SolitaireView view;
+    protected Stack<Move> moveHistory;
+    protected AnimateCard animateCard;
+    protected boolean ignoreEvents;
+    protected EventPoster eventPoster;
+
+    // Anchors
+    protected CardAnchor[] cardAnchors;
+    protected int cardAnchorCount;
+    protected Deck deck;
+    protected int cardCount;
+
+    // Automove
+    protected int autoMoveLevel;
+    protected boolean wasFling;
+    private int type;
+
+    public static Rules createRules(int type, Bundle map, SolitaireView view,
                                     Stack<Move> moveHistory, AnimateCard animate) {
         Rules ret = null;
         switch (type) {
@@ -71,193 +74,193 @@ public abstract class Rules {
         }
 
         if (ret != null) {
-            ret.SetType(type);
-            ret.SetView(view);
-            ret.SetMoveHistory(moveHistory);
-            ret.SetAnimateCard(animate);
-            ret.SetEventPoster(new EventPoster(ret));
-            ret.RefreshOptions();
-            ret.Init(map);
+            ret.setType(type);
+            ret.setView(view);
+            ret.setMoveHistory(moveHistory);
+            ret.setAnimateCard(animate);
+            ret.setEventPoster(new EventPoster(ret));
+            ret.refreshOptions();
+            ret.init(map);
         }
         return ret;
     }
 
-    public int GetType() {
-        return mType;
+    public int getType() {
+        return type;
     }
 
-    public int GetCardCount() {
-        return mCardCount;
+    public int getCardCount() {
+        return cardCount;
     }
 
-    public CardAnchor[] GetAnchorArray() {
-        return mCardAnchor;
+    public CardAnchor[] getCardAnchors() {
+        return cardAnchors;
     }
 
-    public void SetType(int type) {
-        mType = type;
+    public void setType(int type) {
+        this.type = type;
     }
 
-    public void SetView(SolitaireView view) {
-        mView = view;
+    public void setView(SolitaireView view) {
+        this.view = view;
     }
 
-    public void SetMoveHistory(Stack<Move> moveHistory) {
-        mMoveHistory = moveHistory;
+    public void setMoveHistory(Stack<Move> moveHistory) {
+        this.moveHistory = moveHistory;
     }
 
-    public void SetAnimateCard(AnimateCard animateCard) {
-        mAnimateCard = animateCard;
+    public void setAnimateCard(AnimateCard animateCard) {
+        this.animateCard = animateCard;
     }
 
-    public void SetIgnoreEvents(boolean ignore) {
-        mIgnoreEvents = ignore;
+    public void setIgnoreEvents(boolean ignore) {
+        ignoreEvents = ignore;
     }
 
-    public void SetEventPoster(EventPoster ep) {
-        mEventPoster = ep;
+    public void setEventPoster(EventPoster ep) {
+        eventPoster = ep;
     }
 
-    public boolean GetIgnoreEvents() {
-        return mIgnoreEvents;
+    public boolean getIgnoreEvents() {
+        return ignoreEvents;
     }
 
-    public int GetRulesExtra() {
+    public int getRulesExtra() {
         return 0;
     }
 
-    public String GetGameTypeString() {
+    public String getGameTypeString() {
         return "";
     }
 
-    public String GetPrettyGameTypeString() {
+    public String getPrettyGameTypeString() {
         return "";
     }
 
-    public boolean HasScore() {
+    public boolean hasScore() {
         return false;
     }
 
-    public boolean HasString() {
+    public boolean hasString() {
         return false;
     }
 
-    public String GetString() {
+    public String getString() {
         return "";
     }
 
-    public void SetCarryOverScore(int score) {
+    public void setCarryOverScore(int score) {
     }
 
-    public int GetScore() {
+    public int getScore() {
         return 0;
     }
 
-    public void AddDealCount() {
+    public void addDealCount() {
     }
 
-    public int CountFreeSpaces() {
+    public int countFreeSpaces() {
         return 0;
     }
 
-    protected void SignalWin() {
-        mView.DisplayWin();
+    protected void signalWin() {
+        view.displayWin();
     }
 
-    abstract public void Init(Bundle map);
+    abstract public void init(Bundle map);
 
-    public void EventAlert(int event) {
-        if (!mIgnoreEvents) {
-            mEventPoster.PostEvent(event);
-            mView.Refresh();
+    public void eventAlert(int event) {
+        if (!ignoreEvents) {
+            eventPoster.postEvent(event);
+            view.refresh();
         }
     }
 
-    public void EventAlert(int event, CardAnchor anchor) {
-        if (!mIgnoreEvents) {
-            mEventPoster.PostEvent(event, anchor);
-            mView.Refresh();
+    public void eventAlert(int event, CardAnchor anchor) {
+        if (!ignoreEvents) {
+            eventPoster.postEvent(event, anchor);
+            view.refresh();
         }
     }
 
-    public void EventAlert(int event, CardAnchor anchor, Card card) {
-        if (!mIgnoreEvents) {
-            mEventPoster.PostEvent(event, anchor, card);
-            mView.Refresh();
+    public void eventAlert(int event, CardAnchor anchor, Card card) {
+        if (!ignoreEvents) {
+            eventPoster.postEvent(event, anchor, card);
+            view.refresh();
         }
     }
 
-    public void ClearEvent() {
-        mEventPoster.ClearEvent();
+    public void clearEvent() {
+        eventPoster.clearEvent();
     }
 
-    abstract public void EventProcess(int event, CardAnchor anchor);
+    abstract public void eventProcess(int event, CardAnchor anchor);
 
-    abstract public void EventProcess(int event, CardAnchor anchor, Card card);
+    abstract public void eventProcess(int event, CardAnchor anchor, Card card);
 
-    abstract public void EventProcess(int event);
+    abstract public void eventProcess(int event);
 
-    abstract public void Resize(int width, int height);
+    abstract public void resize(int width, int height);
 
-    public boolean Fling(MoveCard moveCard) {
-        moveCard.Release();
+    public boolean fling(MoveCard moveCard) {
+        moveCard.release();
         return false;
     }
 
-    public void HandleEvents() {
-        while (!mIgnoreEvents && mEventPoster.HasEvent()) {
-            mEventPoster.HandleEvent();
+    public void handleEvents() {
+        while (!ignoreEvents && eventPoster.hasEvent()) {
+            eventPoster.handleEvent();
         }
     }
 
-    public void RefreshOptions() {
-        mAutoMoveLevel = mView.GetSettings().getInt("AutoMoveLevel", Rules.AUTO_MOVE_ALWAYS);
-        mWasFling = false;
+    public void refreshOptions() {
+        autoMoveLevel = view.getSettings().getInt("AutoMoveLevel", Rules.AUTO_MOVE_ALWAYS);
+        wasFling = false;
     }
 }
 
 class NormalSolitaire extends Rules {
 
-    private boolean mDealThree;
-    private int mDealsLeft;
-    private String mScoreString;
-    private int mLastScore;
-    private int mCarryOverScore;
+    private boolean isDealThree;
+    private int dealsRemainingCount;
+    private String scoreString;
+    private int lastScore;
+    private int carryOverScore;
 
     @Override
-    public void Init(Bundle map) {
-        mIgnoreEvents = true;
-        mDealThree = mView.GetSettings().getBoolean("SolitaireDealThree", true);
+    public void init(Bundle map) {
+        ignoreEvents = true;
+        isDealThree = view.getSettings().getBoolean("SolitaireDealThree", true);
 
         // Thirteen total anchors for regular solitaire
-        mCardCount = 52;
-        mCardAnchorCount = 13;
-        mCardAnchor = new CardAnchor[mCardAnchorCount];
+        cardCount = 52;
+        cardAnchorCount = 13;
+        cardAnchors = new CardAnchor[cardAnchorCount];
 
         // Top dealt from anchors
-        mCardAnchor[0] = CardAnchor.CreateAnchor(CardAnchor.DEAL_FROM, 0, this);
-        mCardAnchor[1] = CardAnchor.CreateAnchor(CardAnchor.DEAL_TO, 1, this);
-        if (mDealThree) {
-            mCardAnchor[1].SetShowing(3);
+        cardAnchors[0] = CardAnchor.createAnchor(CardAnchor.DEAL_FROM, 0, this);
+        cardAnchors[1] = CardAnchor.createAnchor(CardAnchor.DEAL_TO, 1, this);
+        if (isDealThree) {
+            cardAnchors[1].setShowing(3);
         } else {
-            mCardAnchor[1].SetShowing(1);
+            cardAnchors[1].setShowing(1);
         }
 
         // Top anchors for placing cards
         for (int i = 0; i < 4; i++) {
-            mCardAnchor[i + 2] = CardAnchor.CreateAnchor(CardAnchor.SEQ_SINK, i + 2, this);
+            cardAnchors[i + 2] = CardAnchor.createAnchor(CardAnchor.SEQ_SINK, i + 2, this);
         }
 
         // Middle anchor stacks
         for (int i = 0; i < 7; i++) {
-            mCardAnchor[i + 6] = CardAnchor.CreateAnchor(CardAnchor.GENERIC_ANCHOR, i + 6, this);
-            mCardAnchor[i + 6].SetStartSeq(GenericAnchor.START_KING);
-            mCardAnchor[i + 6].SetBuildSeq(GenericAnchor.SEQ_DSC);
-            mCardAnchor[i + 6].SetMoveSeq(GenericAnchor.SEQ_ASC);
-            mCardAnchor[i + 6].SetSuit(GenericAnchor.SUIT_RB);
-            mCardAnchor[i + 6].SetWrap(false);
-            mCardAnchor[i + 6].SetBehavior(GenericAnchor.PACK_MULTI);
-            mCardAnchor[i + 6].SetDisplay(GenericAnchor.DISPLAY_MIX);
+            cardAnchors[i + 6] = CardAnchor.createAnchor(CardAnchor.GENERIC_ANCHOR, i + 6, this);
+            cardAnchors[i + 6].setStartSeq(GenericAnchor.START_KING);
+            cardAnchors[i + 6].setBuildSeq(GenericAnchor.SEQ_DSC);
+            cardAnchors[i + 6].setMoveSeq(GenericAnchor.SEQ_ASC);
+            cardAnchors[i + 6].setSuit(GenericAnchor.SUIT_RB);
+            cardAnchors[i + 6].setWrap(false);
+            cardAnchors[i + 6].setBehavior(GenericAnchor.PACK_MULTI);
+            cardAnchors[i + 6].setDisplay(GenericAnchor.DISPLAY_MIX);
         }
 
         if (map != null) {
@@ -269,202 +272,202 @@ class NormalSolitaire extends Rules {
                 int[] value = map.getIntArray("value");
                 int[] suit = map.getIntArray("suit");
                 int cardIdx = 0;
-                mDealsLeft = map.getInt("rulesExtra");
+                dealsRemainingCount = map.getInt("rulesExtra");
 
                 for (int i = 0; i < 13; i++) {
                     for (int j = 0; j < cardCount[i]; j++, cardIdx++) {
                         Card card = new Card(value[cardIdx], suit[cardIdx]);
-                        mCardAnchor[i].AddCard(card);
+                        cardAnchors[i].addCard(card);
                     }
-                    mCardAnchor[i].SetHiddenCount(hiddenCount[i]);
+                    cardAnchors[i].setHiddenCount(hiddenCount[i]);
                 }
-                if (mDealsLeft != -1) {
-                    // Reset to zero as GetScore() uses it in its calculation.
-                    mCarryOverScore = 0;
-                    mCarryOverScore = map.getInt("score") - GetScore();
+                if (dealsRemainingCount != -1) {
+                    // reset to zero as getScore() uses it in its calculation.
+                    carryOverScore = 0;
+                    carryOverScore = map.getInt("score") - getScore();
                 }
 
-                mIgnoreEvents = false;
+                ignoreEvents = false;
                 // Return here so an invalid save state will result in a new game
                 return;
             }
         }
 
-        mDeck = new Deck(1);
+        deck = new Deck(1);
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j <= i; j++) {
-                mCardAnchor[i + 6].AddCard(mDeck.PopCard());
+                cardAnchors[i + 6].addCard(deck.popCard());
             }
-            mCardAnchor[i + 6].SetHiddenCount(i);
+            cardAnchors[i + 6].setHiddenCount(i);
         }
 
-        while (!mDeck.Empty()) {
-            mCardAnchor[0].AddCard(mDeck.PopCard());
+        while (!deck.isEmpty()) {
+            cardAnchors[0].addCard(deck.popCard());
         }
 
-        if (mView.GetSettings().getBoolean("SolitaireStyleNormal", true)) {
-            mDealsLeft = -1;
+        if (view.getSettings().getBoolean("SolitaireStyleNormal", true)) {
+            dealsRemainingCount = -1;
         } else {
-            mDealsLeft = mDealThree ? 2 : 0;
-            mLastScore = -52;
-            mScoreString = "-$52";
-            mCarryOverScore = 0;
+            dealsRemainingCount = isDealThree ? 2 : 0;
+            lastScore = -52;
+            scoreString = "-$52";
+            carryOverScore = 0;
         }
-        mIgnoreEvents = false;
+        ignoreEvents = false;
     }
 
     @Override
-    public void SetCarryOverScore(int score) {
-        mCarryOverScore = score;
+    public void setCarryOverScore(int score) {
+        carryOverScore = score;
     }
 
     @Override
-    public void Resize(int width, int height) {
+    public void resize(int width, int height) {
         int rem = width - Card.WIDTH * 7;
         int maxHeight = height - (20 + Card.HEIGHT);
         rem /= 8;
         for (int i = 0; i < 7; i++) {
-            mCardAnchor[i + 6].SetPosition(rem + i * (rem + Card.WIDTH), 20 + Card.HEIGHT);
-            mCardAnchor[i + 6].SetMaxHeight(maxHeight);
+            cardAnchors[i + 6].setPosition(rem + i * (rem + Card.WIDTH), 20 + Card.HEIGHT);
+            cardAnchors[i + 6].setMaxHeight(maxHeight);
         }
 
         for (int i = 3; i >= 0; i--) {
-            mCardAnchor[i + 2].SetPosition(rem + (6 - i) * (rem + Card.WIDTH), 10);
+            cardAnchors[i + 2].setPosition(rem + (6 - i) * (rem + Card.WIDTH), 10);
         }
 
         for (int i = 0; i < 2; i++) {
-            mCardAnchor[i].SetPosition(rem + i * (rem + Card.WIDTH), 10);
+            cardAnchors[i].setPosition(rem + i * (rem + Card.WIDTH), 10);
         }
 
         // Setup edge cards (Touch sensor loses sensitivity towards the edge).
-        mCardAnchor[0].SetLeftEdge(0);
-        mCardAnchor[2].SetRightEdge(width);
-        mCardAnchor[6].SetLeftEdge(0);
-        mCardAnchor[12].SetRightEdge(width);
+        cardAnchors[0].setLeftEdge(0);
+        cardAnchors[2].setRightEdge(width);
+        cardAnchors[6].setLeftEdge(0);
+        cardAnchors[12].setRightEdge(width);
         for (int i = 0; i < 7; i++) {
-            mCardAnchor[i + 6].SetBottom(height);
+            cardAnchors[i + 6].setBottom(height);
         }
     }
 
     @Override
-    public void EventProcess(int event, CardAnchor anchor) {
-        if (mIgnoreEvents) {
+    public void eventProcess(int event, CardAnchor anchor) {
+        if (ignoreEvents) {
             return;
         }
         if (event == EVENT_DEAL) {
-            if (mCardAnchor[0].GetCount() == 0) {
+            if (cardAnchors[0].getCount() == 0) {
                 boolean addDealCount = false;
-                if (mDealsLeft == 0) {
-                    mCardAnchor[0].SetDone(true);
+                if (dealsRemainingCount == 0) {
+                    cardAnchors[0].setDone(true);
                     return;
-                } else if (mDealsLeft > 0) {
-                    mDealsLeft--;
+                } else if (dealsRemainingCount > 0) {
+                    dealsRemainingCount--;
                     addDealCount = true;
                 }
                 int count = 0;
-                while (mCardAnchor[1].GetCount() > 0) {
-                    mCardAnchor[0].AddCard(mCardAnchor[1].PopCard());
+                while (cardAnchors[1].getCount() > 0) {
+                    cardAnchors[0].addCard(cardAnchors[1].popCard());
                     count++;
                 }
-                mMoveHistory.push(new Move(1, 0, count, true, false, addDealCount));
-                mView.Refresh();
+                moveHistory.push(new Move(1, 0, count, true, false, addDealCount));
+                view.refresh();
             } else {
                 int count = 0;
-                int maxCount = mDealThree ? 3 : 1;
-                for (int i = 0; i < maxCount && mCardAnchor[0].GetCount() > 0; i++) {
-                    mCardAnchor[1].AddCard(mCardAnchor[0].PopCard());
+                int maxCount = isDealThree ? 3 : 1;
+                for (int i = 0; i < maxCount && cardAnchors[0].getCount() > 0; i++) {
+                    cardAnchors[1].addCard(cardAnchors[0].popCard());
                     count++;
                 }
-                if (mDealsLeft == 0 && mCardAnchor[0].GetCount() == 0) {
-                    mCardAnchor[0].SetDone(true);
+                if (dealsRemainingCount == 0 && cardAnchors[0].getCount() == 0) {
+                    cardAnchors[0].setDone(true);
                 }
-                mMoveHistory.push(new Move(0, 1, count, true, false));
+                moveHistory.push(new Move(0, 1, count, true, false));
             }
         } else if (event == EVENT_STACK_ADD) {
-            if (mCardAnchor[2].GetCount() == 13 && mCardAnchor[3].GetCount() == 13 &&
-                    mCardAnchor[4].GetCount() == 13 && mCardAnchor[5].GetCount() == 13) {
-                SignalWin();
+            if (cardAnchors[2].getCount() == 13 && cardAnchors[3].getCount() == 13 &&
+                    cardAnchors[4].getCount() == 13 && cardAnchors[5].getCount() == 13) {
+                signalWin();
             } else {
-                if (mAutoMoveLevel == AUTO_MOVE_ALWAYS ||
-                        (mAutoMoveLevel == AUTO_MOVE_FLING_ONLY && mWasFling)) {
-                    EventAlert(EVENT_SMART_MOVE);
+                if (autoMoveLevel == AUTO_MOVE_ALWAYS ||
+                        (autoMoveLevel == AUTO_MOVE_FLING_ONLY && wasFling)) {
+                    eventAlert(EVENT_SMART_MOVE);
                 } else {
-                    mView.StopAnimating();
-                    mWasFling = false;
+                    view.stopAnimating();
+                    wasFling = false;
                 }
             }
         }
     }
 
     @Override
-    public void EventProcess(int event, CardAnchor anchor, Card card) {
-        if (mIgnoreEvents) {
-            anchor.AddCard(card);
+    public void eventProcess(int event, CardAnchor anchor, Card card) {
+        if (ignoreEvents) {
+            anchor.addCard(card);
             return;
         }
         if (event == EVENT_FLING) {
-            mWasFling = true;
+            wasFling = true;
             if (!TryToSinkCard(anchor, card)) {
-                anchor.AddCard(card);
-                mWasFling = false;
+                anchor.addCard(card);
+                wasFling = false;
             }
         } else {
-            anchor.AddCard(card);
+            anchor.addCard(card);
         }
     }
 
     @Override
-    public void EventProcess(int event) {
-        if (mIgnoreEvents) {
+    public void eventProcess(int event) {
+        if (ignoreEvents) {
             return;
         }
         if (event == EVENT_SMART_MOVE) {
             int i;
             for (i = 0; i < 7; i++) {
-                if (mCardAnchor[i + 6].GetCount() > 0 &&
-                        TryToSink(mCardAnchor[i + 6])) {
+                if (cardAnchors[i + 6].getCount() > 0 &&
+                        TryToSink(cardAnchors[i + 6])) {
                     break;
                 }
             }
             if (i == 7) {
-                mWasFling = false;
-                mView.StopAnimating();
+                wasFling = false;
+                view.stopAnimating();
             }
         }
     }
 
     @Override
-    public boolean Fling(MoveCard moveCard) {
-        if (moveCard.GetCount() == 1) {
-            CardAnchor anchor = moveCard.GetAnchor();
-            Card card = moveCard.DumpCards(false)[0];
+    public boolean fling(MoveCard moveCard) {
+        if (moveCard.getCount() == 1) {
+            CardAnchor anchor = moveCard.getAnchor();
+            Card card = moveCard.dumpCards(false)[0];
             for (int i = 0; i < 4; i++) {
-                if (mCardAnchor[i + 2].DropSingleCard(card)) {
-                    EventAlert(EVENT_FLING, anchor, card);
+                if (cardAnchors[i + 2].dropSingleCard(card)) {
+                    eventAlert(EVENT_FLING, anchor, card);
                     return true;
                 }
             }
-            anchor.AddCard(card);
+            anchor.addCard(card);
         } else {
-            moveCard.Release();
+            moveCard.release();
         }
         return false;
     }
 
     private boolean TryToSink(CardAnchor anchor) {
-        Card card = anchor.PopCard();
+        Card card = anchor.popCard();
         boolean ret = TryToSinkCard(anchor, card);
         if (!ret) {
-            anchor.AddCard(card);
+            anchor.addCard(card);
         }
         return ret;
     }
 
     private boolean TryToSinkCard(CardAnchor anchor, Card card) {
         for (int i = 0; i < 4; i++) {
-            if (mCardAnchor[i + 2].DropSingleCard(card)) {
-                mMoveHistory.push(new Move(anchor.GetNumber(), i + 2, 1, false, anchor.UnhideTopCard()));
-                mAnimateCard.MoveCard(card, mCardAnchor[i + 2]);
+            if (cardAnchors[i + 2].dropSingleCard(card)) {
+                moveHistory.push(new Move(anchor.getNumber(), i + 2, 1, false, anchor.unhideTopCard()));
+                animateCard.moveCard(card, cardAnchors[i + 2]);
                 return true;
             }
         }
@@ -473,20 +476,20 @@ class NormalSolitaire extends Rules {
     }
 
     @Override
-    public int GetRulesExtra() {
-        return mDealsLeft;
+    public int getRulesExtra() {
+        return dealsRemainingCount;
     }
 
     @Override
-    public String GetGameTypeString() {
-        if (mDealsLeft == -1) {
-            if (mDealThree) {
+    public String getGameTypeString() {
+        if (dealsRemainingCount == -1) {
+            if (isDealThree) {
                 return "SolitaireNormalDeal3";
             } else {
                 return "SolitaireNormalDeal1";
             }
         } else {
-            if (mDealThree) {
+            if (isDealThree) {
                 return "SolitaireVegasDeal3";
             } else {
                 return "SolitaireVegasDeal1";
@@ -495,15 +498,15 @@ class NormalSolitaire extends Rules {
     }
 
     @Override
-    public String GetPrettyGameTypeString() {
-        if (mDealsLeft == -1) {
-            if (mDealThree) {
+    public String getPrettyGameTypeString() {
+        if (dealsRemainingCount == -1) {
+            if (isDealThree) {
                 return "Solitaire Dealing Three Cards";
             } else {
                 return "Solitaire Dealing One Card";
             }
         } else {
-            if (mDealThree) {
+            if (isDealThree) {
                 return "Vegas Solitaire Dealing Three Cards";
             } else {
                 return "Vegas Solitaire Dealing One Card";
@@ -512,43 +515,43 @@ class NormalSolitaire extends Rules {
     }
 
     @Override
-    public boolean HasScore() {
-        if (mDealsLeft != -1) {
+    public boolean hasScore() {
+        if (dealsRemainingCount != -1) {
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean HasString() {
-        return HasScore();
+    public boolean hasString() {
+        return hasScore();
     }
 
     @Override
-    public String GetString() {
-        if (mDealsLeft != -1) {
-            int score = mCarryOverScore - 52;
+    public String getString() {
+        if (dealsRemainingCount != -1) {
+            int score = carryOverScore - 52;
             for (int i = 0; i < 4; i++) {
-                score += 5 * mCardAnchor[i + 2].GetCount();
+                score += 5 * cardAnchors[i + 2].getCount();
             }
-            if (score != mLastScore) {
+            if (score != lastScore) {
                 if (score < 0) {
-                    mScoreString = "-$" + (score * -1);
+                    scoreString = "-$" + (score * -1);
                 } else {
-                    mScoreString = "$" + score;
+                    scoreString = "$" + score;
                 }
             }
-            return mScoreString;
+            return scoreString;
         }
         return "";
     }
 
     @Override
-    public int GetScore() {
-        if (mDealsLeft != -1) {
-            int score = mCarryOverScore - 52;
+    public int getScore() {
+        if (dealsRemainingCount != -1) {
+            int score = carryOverScore - 52;
             for (int i = 0; i < 4; i++) {
-                score += 5 * mCardAnchor[i + 2].GetCount();
+                score += 5 * cardAnchors[i + 2].getCount();
             }
             return score;
         }
@@ -556,40 +559,40 @@ class NormalSolitaire extends Rules {
     }
 
     @Override
-    public void AddDealCount() {
-        if (mDealsLeft != -1) {
-            mDealsLeft++;
-            mCardAnchor[0].SetDone(false);
+    public void addDealCount() {
+        if (dealsRemainingCount != -1) {
+            dealsRemainingCount++;
+            cardAnchors[0].setDone(false);
         }
     }
 }
 
 class Spider extends Rules {
-    private boolean mStillDealing;
+    private boolean isStillDealing;
 
-    public void Init(Bundle map) {
-        mIgnoreEvents = true;
-        mStillDealing = false;
+    public void init(Bundle map) {
+        ignoreEvents = true;
+        isStillDealing = false;
 
-        mCardCount = 104;
-        mCardAnchorCount = 12;
-        mCardAnchor = new CardAnchor[mCardAnchorCount];
+        cardCount = 104;
+        cardAnchorCount = 12;
+        cardAnchors = new CardAnchor[cardAnchorCount];
 
         // Anchor stacks
         for (int i = 0; i < 10; i++) {
-            mCardAnchor[i] = CardAnchor.CreateAnchor(CardAnchor.SPIDER_STACK, i, this);
-            mCardAnchor[i] = CardAnchor.CreateAnchor(CardAnchor.GENERIC_ANCHOR, i, this);
-            mCardAnchor[i].SetBuildSeq(GenericAnchor.SEQ_DSC);
-            mCardAnchor[i].SetBuildSuit(GenericAnchor.SEQ_ANY);
-            mCardAnchor[i].SetMoveSeq(GenericAnchor.SEQ_ASC);
-            mCardAnchor[i].SetMoveSuit(GenericAnchor.SUIT_SAME);
-            mCardAnchor[i].SetBehavior(GenericAnchor.PACK_MULTI);
-            mCardAnchor[i].SetDisplay(GenericAnchor.DISPLAY_MIX);
-            mCardAnchor[i].SetHack(GenericAnchor.DEALHACK);
+            cardAnchors[i] = CardAnchor.createAnchor(CardAnchor.SPIDER_STACK, i, this);
+            cardAnchors[i] = CardAnchor.createAnchor(CardAnchor.GENERIC_ANCHOR, i, this);
+            cardAnchors[i].setBuildSeq(GenericAnchor.SEQ_DSC);
+            cardAnchors[i].setBuildSuit(GenericAnchor.SEQ_ANY);
+            cardAnchors[i].setMoveSeq(GenericAnchor.SEQ_ASC);
+            cardAnchors[i].setMoveSuit(GenericAnchor.SUIT_SAME);
+            cardAnchors[i].setBehavior(GenericAnchor.PACK_MULTI);
+            cardAnchors[i].setDisplay(GenericAnchor.DISPLAY_MIX);
+            cardAnchors[i].setHack(GenericAnchor.DEALHACK);
         }
 
-        mCardAnchor[10] = CardAnchor.CreateAnchor(CardAnchor.DEAL_FROM, 10, this);
-        mCardAnchor[11] = CardAnchor.CreateAnchor(CardAnchor.DEAL_TO, 11, this);
+        cardAnchors[10] = CardAnchor.createAnchor(CardAnchor.DEAL_FROM, 10, this);
+        cardAnchors[11] = CardAnchor.createAnchor(CardAnchor.DEAL_TO, 11, this);
 
         if (map != null) {
             // Do some assertions, default to a new game if we find an invalid state
@@ -601,117 +604,117 @@ class Spider extends Rules {
                 int[] suit = map.getIntArray("suit");
                 int cardIdx = 0;
 
-                for (int i = 0; i < mCardAnchorCount; i++) {
+                for (int i = 0; i < cardAnchorCount; i++) {
                     for (int j = 0; j < cardCount[i]; j++, cardIdx++) {
                         Card card = new Card(value[cardIdx], suit[cardIdx]);
-                        mCardAnchor[i].AddCard(card);
+                        cardAnchors[i].addCard(card);
                     }
-                    mCardAnchor[i].SetHiddenCount(hiddenCount[i]);
+                    cardAnchors[i].setHiddenCount(hiddenCount[i]);
                 }
 
-                mIgnoreEvents = false;
+                ignoreEvents = false;
                 // Return here so an invalid save state will result in a new game
                 return;
             }
         }
 
-        int suits = mView.GetSettings().getInt("SpiderSuits", 4);
-        mDeck = new Deck(2, suits);
+        int suits = view.getSettings().getInt("SpiderSuits", 4);
+        deck = new Deck(2, suits);
         int i = 54;
         while (i > 0) {
             for (int j = 0; j < 10 && i > 0; j++) {
                 i--;
-                mCardAnchor[j].AddCard(mDeck.PopCard());
-                mCardAnchor[j].SetHiddenCount(mCardAnchor[j].GetCount() - 1);
+                cardAnchors[j].addCard(deck.popCard());
+                cardAnchors[j].setHiddenCount(cardAnchors[j].getCount() - 1);
             }
         }
 
-        while (!mDeck.Empty()) {
-            mCardAnchor[10].AddCard(mDeck.PopCard());
+        while (!deck.isEmpty()) {
+            cardAnchors[10].addCard(deck.popCard());
         }
-        mIgnoreEvents = false;
+        ignoreEvents = false;
     }
 
-    public void Resize(int width, int height) {
+    public void resize(int width, int height) {
         int rem = (width - (Card.WIDTH * 10)) / 10;
         for (int i = 0; i < 10; i++) {
-            mCardAnchor[i].SetPosition(rem / 2 + i * (rem + Card.WIDTH), 10);
-            mCardAnchor[i].SetMaxHeight(height - 10);
+            cardAnchors[i].setPosition(rem / 2 + i * (rem + Card.WIDTH), 10);
+            cardAnchors[i].setMaxHeight(height - 10);
         }
         // Setup edge cards (Touch sensor loses sensitivity towards the edge).
-        mCardAnchor[0].SetLeftEdge(0);
-        mCardAnchor[9].SetRightEdge(width);
+        cardAnchors[0].setLeftEdge(0);
+        cardAnchors[9].setRightEdge(width);
 
         for (int i = 0; i < 10; i++) {
-            mCardAnchor[i].SetBottom(height);
+            cardAnchors[i].setBottom(height);
         }
         // These two are offscreen as the user doesn't need to see them, but they
         // are needed to hold onto out of play cards.
-        mCardAnchor[10].SetPosition(-50, 1);
-        mCardAnchor[11].SetPosition(-50, 1);
+        cardAnchors[10].setPosition(-50, 1);
+        cardAnchors[11].setPosition(-50, 1);
     }
 
     @Override
-    public void EventProcess(int event) {
+    public void eventProcess(int event) {
     }
 
     @Override
-    public void EventProcess(int event, CardAnchor anchor, Card card) {
-        anchor.AddCard(card);
+    public void eventProcess(int event, CardAnchor anchor, Card card) {
+        anchor.addCard(card);
     }
 
     @Override
-    public void EventProcess(int event, CardAnchor anchor) {
-        if (mIgnoreEvents) {
+    public void eventProcess(int event, CardAnchor anchor) {
+        if (ignoreEvents) {
             return;
         }
         if (event == EVENT_STACK_ADD) {
-            if (anchor.GetCount() - anchor.GetHiddenCount() >= 13) {
-                Card[] card = anchor.GetCards();
-                if (card[anchor.GetCount() - 1].GetValue() == 1) {
-                    int suit = card[anchor.GetCount() - 1].GetSuit();
+            if (anchor.getCount() - anchor.getHiddenCount() >= 13) {
+                Card[] card = anchor.getCards();
+                if (card[anchor.getCount() - 1].getValue() == 1) {
+                    int suit = card[anchor.getCount() - 1].getSuit();
                     int val = 2;
-                    for (int i = anchor.GetCount() - 2; i >= 0 && val < 14; i--, val++) {
-                        if (card[i].GetValue() != val || card[i].GetSuit() != suit) {
+                    for (int i = anchor.getCount() - 2; i >= 0 && val < 14; i--, val++) {
+                        if (card[i].getValue() != val || card[i].getSuit() != suit) {
                             break;
                         }
                     }
                     if (val == 14) {
                         for (int j = 0; j < 13; j++) {
-                            mCardAnchor[11].AddCard(anchor.PopCard());
+                            cardAnchors[11].addCard(anchor.popCard());
                         }
-                        mMoveHistory.push(new Move(anchor.GetNumber(), 11, 13, true, anchor.UnhideTopCard()));
+                        moveHistory.push(new Move(anchor.getNumber(), 11, 13, true, anchor.unhideTopCard()));
 
-                        if (mCardAnchor[11].GetCount() == mCardCount) {
-                            SignalWin();
+                        if (cardAnchors[11].getCount() == cardCount) {
+                            signalWin();
                         }
                     }
                 }
             }
-            if (mStillDealing) {
-                // Post another event if we aren't done yet.
-                EventAlert(EVENT_DEAL_NEXT, mCardAnchor[anchor.GetNumber() + 1]);
+            if (isStillDealing) {
+                // Post another event if we aren't isDone yet.
+                eventAlert(EVENT_DEAL_NEXT, cardAnchors[anchor.getNumber() + 1]);
             }
         } else if (event == EVENT_DEAL) {
-            if (mCardAnchor[10].GetCount() > 0) {
-                int count = mCardAnchor[10].GetCount() > 10 ? 10 : mCardAnchor[10].GetCount();
-                mAnimateCard.MoveCard(mCardAnchor[10].PopCard(), mCardAnchor[0]);
-                mMoveHistory.push(new Move(10, 0, count - 1, 1, false, false));
-                mStillDealing = true;
+            if (cardAnchors[10].getCount() > 0) {
+                int count = cardAnchors[10].getCount() > 10 ? 10 : cardAnchors[10].getCount();
+                animateCard.moveCard(cardAnchors[10].popCard(), cardAnchors[0]);
+                moveHistory.push(new Move(10, 0, count - 1, 1, false, false));
+                isStillDealing = true;
             }
         } else if (event == EVENT_DEAL_NEXT) {
-            if (mCardAnchor[10].GetCount() > 0 && anchor.GetNumber() < 10) {
-                mAnimateCard.MoveCard(mCardAnchor[10].PopCard(), anchor);
+            if (cardAnchors[10].getCount() > 0 && anchor.getNumber() < 10) {
+                animateCard.moveCard(cardAnchors[10].popCard(), anchor);
             } else {
-                mView.StopAnimating();
-                mStillDealing = false;
+                view.stopAnimating();
+                isStillDealing = false;
             }
         }
     }
 
     @Override
-    public String GetGameTypeString() {
-        int suits = mView.GetSettings().getInt("SpiderSuits", 4);
+    public String getGameTypeString() {
+        int suits = view.getSettings().getInt("SpiderSuits", 4);
         if (suits == 1) {
             return "Spider1Suit";
         } else if (suits == 2) {
@@ -722,8 +725,8 @@ class Spider extends Rules {
     }
 
     @Override
-    public String GetPrettyGameTypeString() {
-        int suits = mView.GetSettings().getInt("SpiderSuits", 4);
+    public String getPrettyGameTypeString() {
+        int suits = view.getSettings().getInt("SpiderSuits", 4);
         if (suits == 1) {
             return "Spider One Suit";
         } else if (suits == 2) {
@@ -734,13 +737,13 @@ class Spider extends Rules {
     }
 
     @Override
-    public boolean HasString() {
+    public boolean hasString() {
         return true;
     }
 
     @Override
-    public String GetString() {
-        int dealCount = mCardAnchor[10].GetCount() / 10;
+    public String getString() {
+        int dealCount = cardAnchors[10].getCount() / 10;
         if (dealCount == 1) {
             return "1 deal left";
         }
@@ -751,27 +754,27 @@ class Spider extends Rules {
 
 class Freecell extends Rules {
 
-    public void Init(Bundle map) {
-        mIgnoreEvents = true;
+    public void init(Bundle map) {
+        ignoreEvents = true;
 
         // Thirteen total anchors for regular solitaire
-        mCardCount = 52;
-        mCardAnchorCount = 16;
-        mCardAnchor = new CardAnchor[mCardAnchorCount];
+        cardCount = 52;
+        cardAnchorCount = 16;
+        cardAnchors = new CardAnchor[cardAnchorCount];
 
         // Top anchors for holding cards
         for (int i = 0; i < 4; i++) {
-            mCardAnchor[i] = CardAnchor.CreateAnchor(CardAnchor.FREECELL_HOLD, i, this);
+            cardAnchors[i] = CardAnchor.createAnchor(CardAnchor.FREECELL_HOLD, i, this);
         }
 
         // Top anchors for sinking cards
         for (int i = 0; i < 4; i++) {
-            mCardAnchor[i + 4] = CardAnchor.CreateAnchor(CardAnchor.SEQ_SINK, i + 4, this);
+            cardAnchors[i + 4] = CardAnchor.createAnchor(CardAnchor.SEQ_SINK, i + 4, this);
         }
 
         // Middle anchor stacks
         for (int i = 0; i < 8; i++) {
-            mCardAnchor[i + 8] = CardAnchor.CreateAnchor(CardAnchor.FREECELL_STACK, i + 8,
+            cardAnchors[i + 8] = CardAnchor.createAnchor(CardAnchor.FREECELL_STACK, i + 8,
                     this);
         }
 
@@ -788,60 +791,60 @@ class Freecell extends Rules {
                 for (int i = 0; i < 16; i++) {
                     for (int j = 0; j < cardCount[i]; j++, cardIdx++) {
                         Card card = new Card(value[cardIdx], suit[cardIdx]);
-                        mCardAnchor[i].AddCard(card);
+                        cardAnchors[i].addCard(card);
                     }
-                    mCardAnchor[i].SetHiddenCount(hiddenCount[i]);
+                    cardAnchors[i].setHiddenCount(hiddenCount[i]);
                 }
 
-                mIgnoreEvents = false;
+                ignoreEvents = false;
                 // Return here so an invalid save state will result in a new game
                 return;
             }
         }
 
-        mDeck = new Deck(1);
-        while (!mDeck.Empty()) {
-            for (int i = 0; i < 8 && !mDeck.Empty(); i++) {
-                mCardAnchor[i + 8].AddCard(mDeck.PopCard());
+        deck = new Deck(1);
+        while (!deck.isEmpty()) {
+            for (int i = 0; i < 8 && !deck.isEmpty(); i++) {
+                cardAnchors[i + 8].addCard(deck.popCard());
             }
         }
-        mIgnoreEvents = false;
+        ignoreEvents = false;
     }
 
-    public void Resize(int width, int height) {
+    public void resize(int width, int height) {
         int rem = (width - (Card.WIDTH * 8)) / 8;
         for (int i = 0; i < 8; i++) {
-            mCardAnchor[i].SetPosition(rem / 2 + i * (rem + Card.WIDTH), 10);
-            mCardAnchor[i + 8].SetPosition(rem / 2 + i * (rem + Card.WIDTH), 30 + Card.HEIGHT);
-            mCardAnchor[i + 8].SetMaxHeight(height - 30 - Card.HEIGHT);
+            cardAnchors[i].setPosition(rem / 2 + i * (rem + Card.WIDTH), 10);
+            cardAnchors[i + 8].setPosition(rem / 2 + i * (rem + Card.WIDTH), 30 + Card.HEIGHT);
+            cardAnchors[i + 8].setMaxHeight(height - 30 - Card.HEIGHT);
         }
 
         // Setup edge cards (Touch sensor loses sensitivity towards the edge).
-        mCardAnchor[0].SetLeftEdge(0);
-        mCardAnchor[7].SetRightEdge(width);
-        mCardAnchor[8].SetLeftEdge(0);
-        mCardAnchor[15].SetRightEdge(width);
+        cardAnchors[0].setLeftEdge(0);
+        cardAnchors[7].setRightEdge(width);
+        cardAnchors[8].setLeftEdge(0);
+        cardAnchors[15].setRightEdge(width);
         for (int i = 0; i < 8; i++) {
-            mCardAnchor[i + 8].SetBottom(height);
+            cardAnchors[i + 8].setBottom(height);
         }
     }
 
-    public void EventProcess(int event, CardAnchor anchor) {
-        if (mIgnoreEvents) {
+    public void eventProcess(int event, CardAnchor anchor) {
+        if (ignoreEvents) {
             return;
         }
         if (event == EVENT_STACK_ADD) {
-            if (anchor.GetNumber() >= 4 && anchor.GetNumber() < 8) {
-                if (mCardAnchor[4].GetCount() == 13 && mCardAnchor[5].GetCount() == 13 &&
-                        mCardAnchor[6].GetCount() == 13 && mCardAnchor[7].GetCount() == 13) {
-                    SignalWin();
+            if (anchor.getNumber() >= 4 && anchor.getNumber() < 8) {
+                if (cardAnchors[4].getCount() == 13 && cardAnchors[5].getCount() == 13 &&
+                        cardAnchors[6].getCount() == 13 && cardAnchors[7].getCount() == 13) {
+                    signalWin();
                 } else {
-                    if (mAutoMoveLevel == AUTO_MOVE_ALWAYS ||
-                            (mAutoMoveLevel == AUTO_MOVE_FLING_ONLY && mWasFling)) {
-                        EventAlert(EVENT_SMART_MOVE);
+                    if (autoMoveLevel == AUTO_MOVE_ALWAYS ||
+                            (autoMoveLevel == AUTO_MOVE_FLING_ONLY && wasFling)) {
+                        eventAlert(EVENT_SMART_MOVE);
                     } else {
-                        mView.StopAnimating();
-                        mWasFling = false;
+                        view.stopAnimating();
+                        wasFling = false;
                     }
                 }
             }
@@ -849,55 +852,55 @@ class Freecell extends Rules {
     }
 
     @Override
-    public boolean Fling(MoveCard moveCard) {
-        if (moveCard.GetCount() == 1) {
-            CardAnchor anchor = moveCard.GetAnchor();
-            Card card = moveCard.DumpCards(false)[0];
+    public boolean fling(MoveCard moveCard) {
+        if (moveCard.getCount() == 1) {
+            CardAnchor anchor = moveCard.getAnchor();
+            Card card = moveCard.dumpCards(false)[0];
             for (int i = 0; i < 4; i++) {
-                if (mCardAnchor[i + 4].DropSingleCard(card)) {
-                    EventAlert(EVENT_FLING, anchor, card);
+                if (cardAnchors[i + 4].dropSingleCard(card)) {
+                    eventAlert(EVENT_FLING, anchor, card);
                     return true;
                 }
             }
-            anchor.AddCard(card);
+            anchor.addCard(card);
         } else {
-            moveCard.Release();
+            moveCard.release();
         }
 
         return false;
     }
 
     @Override
-    public void EventProcess(int event, CardAnchor anchor, Card card) {
-        if (mIgnoreEvents) {
-            anchor.AddCard(card);
+    public void eventProcess(int event, CardAnchor anchor, Card card) {
+        if (ignoreEvents) {
+            anchor.addCard(card);
             return;
         }
         if (event == EVENT_FLING) {
-            mWasFling = true;
+            wasFling = true;
             if (!TryToSinkCard(anchor, card)) {
-                anchor.AddCard(card);
-                mWasFling = false;
+                anchor.addCard(card);
+                wasFling = false;
             }
         } else {
-            anchor.AddCard(card);
+            anchor.addCard(card);
         }
     }
 
     private boolean TryToSink(CardAnchor anchor) {
-        Card card = anchor.PopCard();
+        Card card = anchor.popCard();
         boolean ret = TryToSinkCard(anchor, card);
         if (!ret) {
-            anchor.AddCard(card);
+            anchor.addCard(card);
         }
         return ret;
     }
 
     private boolean TryToSinkCard(CardAnchor anchor, Card card) {
         for (int i = 0; i < 4; i++) {
-            if (mCardAnchor[i + 4].DropSingleCard(card)) {
-                mAnimateCard.MoveCard(card, mCardAnchor[i + 4]);
-                mMoveHistory.push(new Move(anchor.GetNumber(), i + 4, 1, false, false));
+            if (cardAnchors[i + 4].dropSingleCard(card)) {
+                animateCard.moveCard(card, cardAnchors[i + 4]);
+                moveHistory.push(new Move(anchor.getNumber(), i + 4, 1, false, false));
                 return true;
             }
         }
@@ -906,38 +909,39 @@ class Freecell extends Rules {
     }
 
     @Override
-    public void EventProcess(int event) {
-        if (mIgnoreEvents == true) {
+    public void eventProcess(int event) {
+        if (ignoreEvents) {
             return;
         }
+
         if (event == EVENT_SMART_MOVE) {
             for (int i = 0; i < 4; i++) {
-                if (mCardAnchor[i].GetCount() > 0 &&
-                        TryToSink(mCardAnchor[i])) {
+                if (cardAnchors[i].getCount() > 0 &&
+                        TryToSink(cardAnchors[i])) {
                     return;
                 }
             }
             for (int i = 0; i < 8; i++) {
-                if (mCardAnchor[i + 8].GetCount() > 0 &&
-                        TryToSink(mCardAnchor[i + 8])) {
+                if (cardAnchors[i + 8].getCount() > 0 &&
+                        TryToSink(cardAnchors[i + 8])) {
                     return;
                 }
             }
-            mWasFling = false;
-            mView.StopAnimating();
+            wasFling = false;
+            view.stopAnimating();
         }
     }
 
     @Override
-    public int CountFreeSpaces() {
+    public int countFreeSpaces() {
         int free = 0;
         for (int i = 0; i < 4; i++) {
-            if (mCardAnchor[i].GetCount() == 0) {
+            if (cardAnchors[i].getCount() == 0) {
                 free++;
             }
         }
         for (int i = 0; i < 8; i++) {
-            if (mCardAnchor[i + 8].GetCount() == 0) {
+            if (cardAnchors[i + 8].getCount() == 0) {
                 free++;
             }
         }
@@ -945,43 +949,43 @@ class Freecell extends Rules {
     }
 
     @Override
-    public String GetGameTypeString() {
+    public String getGameTypeString() {
         return "Freecell";
     }
 
     @Override
-    public String GetPrettyGameTypeString() {
+    public String getPrettyGameTypeString() {
         return "Freecell";
     }
 }
 
 class FortyThieves extends Rules {
 
-    public void Init(Bundle map) {
-        mIgnoreEvents = true;
+    public void init(Bundle map) {
+        ignoreEvents = true;
 
-        mCardCount = 104;
-        mCardAnchorCount = 20;
-        mCardAnchor = new CardAnchor[mCardAnchorCount];
+        cardCount = 104;
+        cardAnchorCount = 20;
+        cardAnchors = new CardAnchor[cardAnchorCount];
 
         // Anchor stacks
         for (int i = 0; i < 10; i++) {
-            mCardAnchor[i] = CardAnchor.CreateAnchor(CardAnchor.GENERIC_ANCHOR, i, this);
-            mCardAnchor[i].SetBuildSeq(GenericAnchor.SEQ_DSC);
-            mCardAnchor[i].SetMoveSeq(GenericAnchor.SEQ_ASC);
-            mCardAnchor[i].SetSuit(GenericAnchor.SUIT_SAME);
-            mCardAnchor[i].SetWrap(false);
-            mCardAnchor[i].SetPickup(GenericAnchor.PACK_LIMIT_BY_FREE);
-            mCardAnchor[i].SetDropoff(GenericAnchor.PACK_MULTI);
-            mCardAnchor[i].SetDisplay(GenericAnchor.DISPLAY_ALL);
+            cardAnchors[i] = CardAnchor.createAnchor(CardAnchor.GENERIC_ANCHOR, i, this);
+            cardAnchors[i].setBuildSeq(GenericAnchor.SEQ_DSC);
+            cardAnchors[i].setMoveSeq(GenericAnchor.SEQ_ASC);
+            cardAnchors[i].setSuit(GenericAnchor.SUIT_SAME);
+            cardAnchors[i].setWrap(false);
+            cardAnchors[i].setPickup(GenericAnchor.PACK_LIMIT_BY_FREE);
+            cardAnchors[i].setDropoff(GenericAnchor.PACK_MULTI);
+            cardAnchors[i].setDisplay(GenericAnchor.DISPLAY_ALL);
         }
         // Bottom anchors for holding cards
         for (int i = 0; i < 8; i++) {
-            mCardAnchor[i + 10] = CardAnchor.CreateAnchor(CardAnchor.SEQ_SINK, i + 10, this);
+            cardAnchors[i + 10] = CardAnchor.createAnchor(CardAnchor.SEQ_SINK, i + 10, this);
         }
 
-        mCardAnchor[18] = CardAnchor.CreateAnchor(CardAnchor.DEAL_FROM, 18, this);
-        mCardAnchor[19] = CardAnchor.CreateAnchor(CardAnchor.DEAL_TO, 19, this);
+        cardAnchors[18] = CardAnchor.createAnchor(CardAnchor.DEAL_FROM, 18, this);
+        cardAnchors[19] = CardAnchor.createAnchor(CardAnchor.DEAL_TO, 19, this);
 
         if (map != null) {
             // Do some assertions, default to a new game if we find an invalid state
@@ -996,97 +1000,97 @@ class FortyThieves extends Rules {
                 for (int i = 0; i < 20; i++) {
                     for (int j = 0; j < cardCount[i]; j++, cardIdx++) {
                         Card card = new Card(value[cardIdx], suit[cardIdx]);
-                        mCardAnchor[i].AddCard(card);
+                        cardAnchors[i].addCard(card);
                     }
-                    mCardAnchor[i].SetHiddenCount(hiddenCount[i]);
+                    cardAnchors[i].setHiddenCount(hiddenCount[i]);
                 }
 
-                mIgnoreEvents = false;
+                ignoreEvents = false;
                 // Return here so an invalid save state will result in a new game
                 return;
             }
         }
 
-        mDeck = new Deck(2);
+        deck = new Deck(2);
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 4; j++) {
-                mCardAnchor[i].AddCard(mDeck.PopCard());
+                cardAnchors[i].addCard(deck.popCard());
             }
         }
-        while (!mDeck.Empty()) {
-            mCardAnchor[18].AddCard(mDeck.PopCard());
+        while (!deck.isEmpty()) {
+            cardAnchors[18].addCard(deck.popCard());
         }
-        mIgnoreEvents = false;
+        ignoreEvents = false;
     }
 
-    public void Resize(int width, int height) {
+    public void resize(int width, int height) {
         int rem = (width - (Card.WIDTH * 10)) / 10;
         for (int i = 0; i < 10; i++) {
-            mCardAnchor[i].SetMaxHeight(height - 30 - Card.HEIGHT);
-            mCardAnchor[i].SetPosition(rem / 2 + i * (rem + Card.WIDTH), 30 + Card.HEIGHT);
+            cardAnchors[i].setMaxHeight(height - 30 - Card.HEIGHT);
+            cardAnchors[i].setPosition(rem / 2 + i * (rem + Card.WIDTH), 30 + Card.HEIGHT);
 
-            mCardAnchor[i + 10].SetPosition(rem / 2 + i * (rem + Card.WIDTH), 10);
+            cardAnchors[i + 10].setPosition(rem / 2 + i * (rem + Card.WIDTH), 10);
         }
 
         // Setup edge cards (Touch sensor loses sensitivity towards the edge).
-        mCardAnchor[0].SetLeftEdge(0);
-        mCardAnchor[9].SetRightEdge(width);
-        mCardAnchor[10].SetLeftEdge(0);
-        mCardAnchor[19].SetRightEdge(width);
+        cardAnchors[0].setLeftEdge(0);
+        cardAnchors[9].setRightEdge(width);
+        cardAnchors[10].setLeftEdge(0);
+        cardAnchors[19].setRightEdge(width);
         for (int i = 0; i < 10; i++) {
-            mCardAnchor[i].SetBottom(height);
+            cardAnchors[i].setBottom(height);
         }
     }
 
     @Override
-    public boolean Fling(MoveCard moveCard) {
-        if (moveCard.GetCount() == 1) {
-            CardAnchor anchor = moveCard.GetAnchor();
-            Card card = moveCard.DumpCards(false)[0];
+    public boolean fling(MoveCard moveCard) {
+        if (moveCard.getCount() == 1) {
+            CardAnchor anchor = moveCard.getAnchor();
+            Card card = moveCard.dumpCards(false)[0];
             for (int i = 0; i < 8; i++) {
-                if (mCardAnchor[i + 10].DropSingleCard(card)) {
-                    mEventPoster.PostEvent(EVENT_FLING, anchor, card);
+                if (cardAnchors[i + 10].dropSingleCard(card)) {
+                    eventPoster.postEvent(EVENT_FLING, anchor, card);
                     return true;
                 }
             }
-            anchor.AddCard(card);
+            anchor.addCard(card);
         } else {
-            moveCard.Release();
+            moveCard.release();
         }
         return false;
     }
 
     @Override
-    public void EventProcess(int event, CardAnchor anchor, Card card) {
-        if (mIgnoreEvents) {
-            anchor.AddCard(card);
+    public void eventProcess(int event, CardAnchor anchor, Card card) {
+        if (ignoreEvents) {
+            anchor.addCard(card);
             return;
         }
         if (event == EVENT_FLING) {
-            mWasFling = true;
-            if (!TryToSinkCard(anchor, card)) {
-                anchor.AddCard(card);
-                mWasFling = false;
+            wasFling = true;
+            if (!tryToSinkCard(anchor, card)) {
+                anchor.addCard(card);
+                wasFling = false;
             }
         } else {
-            anchor.AddCard(card);
+            anchor.addCard(card);
         }
     }
 
-    private boolean TryToSink(CardAnchor anchor) {
-        Card card = anchor.PopCard();
-        boolean ret = TryToSinkCard(anchor, card);
+    private boolean tryToSink(CardAnchor anchor) {
+        Card card = anchor.popCard();
+        boolean ret = tryToSinkCard(anchor, card);
         if (!ret) {
-            anchor.AddCard(card);
+            anchor.addCard(card);
         }
         return ret;
     }
 
-    private boolean TryToSinkCard(CardAnchor anchor, Card card) {
+    private boolean tryToSinkCard(CardAnchor anchor, Card card) {
         for (int i = 0; i < 8; i++) {
-            if (mCardAnchor[i + 10].DropSingleCard(card)) {
-                mAnimateCard.MoveCard(card, mCardAnchor[i + 10]);
-                mMoveHistory.push(new Move(anchor.GetNumber(), i + 10, 1, false, false));
+            if (cardAnchors[i + 10].dropSingleCard(card)) {
+                animateCard.moveCard(card, cardAnchors[i + 10]);
+                moveHistory.push(new Move(anchor.getNumber(), i + 10, 1, false, false));
                 return true;
             }
         }
@@ -1094,32 +1098,32 @@ class FortyThieves extends Rules {
     }
 
     @Override
-    public void EventProcess(int event, CardAnchor anchor) {
-        if (mIgnoreEvents) {
+    public void eventProcess(int event, CardAnchor anchor) {
+        if (ignoreEvents) {
             return;
         }
         if (event == EVENT_DEAL) {
-            if (mCardAnchor[18].GetCount() > 0) {
-                mCardAnchor[19].AddCard(mCardAnchor[18].PopCard());
-                if (mCardAnchor[18].GetCount() == 0) {
-                    mCardAnchor[18].SetDone(true);
+            if (cardAnchors[18].getCount() > 0) {
+                cardAnchors[19].addCard(cardAnchors[18].popCard());
+                if (cardAnchors[18].getCount() == 0) {
+                    cardAnchors[18].setDone(true);
                 }
-                mMoveHistory.push(new Move(18, 19, 1, true, false));
+                moveHistory.push(new Move(18, 19, 1, true, false));
             }
         } else if (event == EVENT_STACK_ADD) {
-            if (anchor.GetNumber() >= 10 && anchor.GetNumber() < 18) {
-                if (mCardAnchor[10].GetCount() == 13 && mCardAnchor[11].GetCount() == 13 &&
-                        mCardAnchor[12].GetCount() == 13 && mCardAnchor[13].GetCount() == 13 &&
-                        mCardAnchor[14].GetCount() == 13 && mCardAnchor[15].GetCount() == 13 &&
-                        mCardAnchor[16].GetCount() == 13 && mCardAnchor[17].GetCount() == 13) {
-                    SignalWin();
+            if (anchor.getNumber() >= 10 && anchor.getNumber() < 18) {
+                if (cardAnchors[10].getCount() == 13 && cardAnchors[11].getCount() == 13 &&
+                        cardAnchors[12].getCount() == 13 && cardAnchors[13].getCount() == 13 &&
+                        cardAnchors[14].getCount() == 13 && cardAnchors[15].getCount() == 13 &&
+                        cardAnchors[16].getCount() == 13 && cardAnchors[17].getCount() == 13) {
+                    signalWin();
                 } else {
-                    if (mAutoMoveLevel == AUTO_MOVE_ALWAYS ||
-                            (mAutoMoveLevel == AUTO_MOVE_FLING_ONLY && mWasFling)) {
-                        mEventPoster.PostEvent(EVENT_SMART_MOVE);
+                    if (autoMoveLevel == AUTO_MOVE_ALWAYS ||
+                            (autoMoveLevel == AUTO_MOVE_FLING_ONLY && wasFling)) {
+                        eventPoster.postEvent(EVENT_SMART_MOVE);
                     } else {
-                        mView.StopAnimating();
-                        mWasFling = false;
+                        view.stopAnimating();
+                        wasFling = false;
                     }
                 }
             }
@@ -1127,27 +1131,28 @@ class FortyThieves extends Rules {
     }
 
     @Override
-    public void EventProcess(int event) {
-        if (mIgnoreEvents == true) {
+    public void eventProcess(int event) {
+        if (ignoreEvents) {
             return;
         }
+
         if (event == EVENT_SMART_MOVE) {
             for (int i = 0; i < 10; i++) {
-                if (mCardAnchor[i].GetCount() > 0 &&
-                        TryToSink(mCardAnchor[i])) {
+                if (cardAnchors[i].getCount() > 0 &&
+                        tryToSink(cardAnchors[i])) {
                     return;
                 }
             }
-            mWasFling = false;
-            mView.StopAnimating();
+            wasFling = false;
+            view.stopAnimating();
         }
     }
 
     @Override
-    public int CountFreeSpaces() {
+    public int countFreeSpaces() {
         int free = 0;
         for (int i = 0; i < 10; i++) {
-            if (mCardAnchor[i].GetCount() == 0) {
+            if (cardAnchors[i].getCount() == 0) {
                 free++;
             }
         }
@@ -1155,23 +1160,23 @@ class FortyThieves extends Rules {
     }
 
     @Override
-    public String GetGameTypeString() {
+    public String getGameTypeString() {
         return "Forty Thieves";
     }
 
     @Override
-    public String GetPrettyGameTypeString() {
+    public String getPrettyGameTypeString() {
         return "Forty Thieves";
     }
 
     @Override
-    public boolean HasString() {
+    public boolean hasString() {
         return true;
     }
 
     @Override
-    public String GetString() {
-        int cardsLeft = mCardAnchor[18].GetCount();
+    public String getString() {
+        int cardsLeft = cardAnchors[18].getCount();
         if (cardsLeft == 1) {
             return "1 card left";
         }
@@ -1182,55 +1187,55 @@ class FortyThieves extends Rules {
 
 
 class EventPoster {
-    private int mEvent;
-    private CardAnchor mCardAnchor;
-    private Card mCard;
-    private Rules mRules;
+    private int event;
+    private CardAnchor cardAnchor;
+    private Card card;
+    private Rules rules;
 
     public EventPoster(Rules rules) {
-        mRules = rules;
-        mEvent = -1;
-        mCardAnchor = null;
-        mCard = null;
+        this.rules = rules;
+        event = -1;
+        cardAnchor = null;
+        card = null;
     }
 
-    public void PostEvent(int event) {
-        PostEvent(event, null, null);
+    public void postEvent(int event) {
+        postEvent(event, null, null);
     }
 
-    public void PostEvent(int event, CardAnchor anchor) {
-        PostEvent(event, anchor, null);
+    public void postEvent(int event, CardAnchor anchor) {
+        postEvent(event, anchor, null);
     }
 
-    public void PostEvent(int event, CardAnchor anchor, Card card) {
-        mEvent = event;
-        mCardAnchor = anchor;
-        mCard = card;
+    public void postEvent(int theEvent, CardAnchor theAnchor, Card theCard) {
+        event = theEvent;
+        cardAnchor = theAnchor;
+        card = theCard;
     }
 
 
-    public void ClearEvent() {
-        mEvent = Rules.EVENT_INVALID;
-        mCardAnchor = null;
-        mCard = null;
+    public void clearEvent() {
+        event = Rules.EVENT_INVALID;
+        cardAnchor = null;
+        card = null;
     }
 
-    public boolean HasEvent() {
-        return mEvent != Rules.EVENT_INVALID;
+    public boolean hasEvent() {
+        return event != Rules.EVENT_INVALID;
     }
 
-    public void HandleEvent() {
-        if (HasEvent()) {
-            int event = mEvent;
-            CardAnchor cardAnchor = mCardAnchor;
-            Card card = mCard;
-            ClearEvent();
+    public void handleEvent() {
+        if (hasEvent()) {
+            int event = this.event;
+            CardAnchor cardAnchor = this.cardAnchor;
+            Card card = this.card;
+            clearEvent();
             if (cardAnchor != null && card != null) {
-                mRules.EventProcess(event, cardAnchor, card);
+                rules.eventProcess(event, cardAnchor, card);
             } else if (cardAnchor != null) {
-                mRules.EventProcess(event, cardAnchor);
+                rules.eventProcess(event, cardAnchor);
             } else {
-                mRules.EventProcess(event);
+                rules.eventProcess(event);
             }
         }
     }

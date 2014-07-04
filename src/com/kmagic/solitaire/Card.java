@@ -26,26 +26,23 @@ class Card {
     public static final int JACK = 11;
     public static final int QUEEN = 12;
     public static final int KING = 13;
-    public static final String TEXT[] = {
-            "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"
-    };
 
     public static int WIDTH = 45;
     public static int HEIGHT = 64;
 
-    private int mValue;
-    private int mSuit;
-    private float mX;
-    private float mY;
+    private int value;
+    private int suit;
+    private float locationX;
+    private float locationY;
 
-    public Card(int value, int suit) {
-        mValue = value;
-        mSuit = suit;
-        mX = 1;
-        mY = 1;
+    public Card(int theValue, int theSuit) {
+        value = theValue;
+        suit = theSuit;
+        locationX = 1;
+        locationY = 1;
     }
 
-    public static void SetSize(int type) {
+    public static void setSize(int type) {
         if (type == Rules.SOLITAIRE) {
             WIDTH = 51;
             HEIGHT = 72;
@@ -58,30 +55,30 @@ class Card {
         }
     }
 
-    public float GetX() {
-        return mX;
+    public float getX() {
+        return locationX;
     }
 
-    public float GetY() {
-        return mY;
+    public float getY() {
+        return locationY;
     }
 
-    public int GetValue() {
-        return mValue;
+    public int getValue() {
+        return value;
     }
 
-    public int GetSuit() {
-        return mSuit;
+    public int getSuit() {
+        return suit;
     }
 
-    public void SetPosition(float x, float y) {
-        mX = x;
-        mY = y;
+    public void setPosition(float x, float y) {
+        locationX = x;
+        locationY = y;
     }
 
-    public void MovePosition(float dx, float dy) {
-        mX -= dx;
-        mY -= dy;
+    public void movePosition(float dx, float dy) {
+        locationX -= dx;
+        locationY -= dy;
     }
 }
 
