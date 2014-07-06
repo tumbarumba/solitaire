@@ -1,9 +1,9 @@
-## Tumbarumba Solitaire
+## ExSolitaire
 
 This is a clone of Ken Magic's [Solitaire for Android](https://code.google.com/p/solitaire-for-android/),
 with updates to allow it to run on modern devices.
 
-Tumbarumba Solitaire is a collection different card games:
+ExSolitaire is a collection different card games:
 * Klondike (regular solitaire)
 * Spider Solitaire
 * Freecell

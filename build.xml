@@ -21,7 +21,7 @@
     <property name="android-tools" value="/usr/local/android-sdk-linux_x86-1.0_r1/tools" />
     
     <!-- Application Package Name -->
-    <property name="application-package" value="com.kmagic.solitaire" />
+    <property name="application-package" value="com.exubero.solitaire" />
 
     <!-- The intermediates directory -->
     <!-- Eclipse uses "bin" for its own output, so we do the same. -->

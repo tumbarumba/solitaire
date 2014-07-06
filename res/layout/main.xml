@@ -19,7 +19,7 @@
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
-    <com.kmagic.solitaire.SolitaireView
+    <com.exubero.solitaire.SolitaireView
       android:id="@+id/solitaire"
       android:layout_width="fill_parent"
       android:layout_height="fill_parent" />
